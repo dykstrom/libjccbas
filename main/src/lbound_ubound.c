@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -65,7 +66,7 @@ int64_t ubound_I64(const void* array, int64_t dimension) {
   const int64_t num_dimensions = i64_array[-1];
 
   if (dimension < 1 || dimension > num_dimensions) {
-    printf("Error: Illegal function call: ubound");
+    printf("Error: Illegal function call: ubound(*array*, %" PRId64 ")", dimension);
     exit(1);
   }
   

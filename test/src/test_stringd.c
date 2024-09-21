@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Johan Dykstrom
+ * Copyright (C) 2024 Johan Dykstrom
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,34 +15,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <math.h>
 #include <stdlib.h>
 
-#include "randomize_rnd.h"
+#include "assert.h"
+#include "stringd.h"
 
-// The last number returned
-static double last_number = 0.0;
+int main(int argc, char *argv[]) {
+  char *actual;
 
-void randomize(double seed) {
-  // Add 32768 to get a better range from interactive seed
-  seed += 32768;
-  // Multiply by 1000 to get a better range from timer seed
-  seed *= 1000;
-  srand(fabs(seed));
-}
+  actual = string$_I64(0, 45);
+  assert_equals_Str_Str("", actual);
+  free(actual);
 
-double rnd() {
-  return rnd_F64(1.0);
-}
+  actual = string$_I64(3, 229);
+  assert_equals_Str_Str("ååå", actual);
+  free(actual);
 
-double rnd_F64(double seed) {
-  if (seed < 0.0) {
-    randomize(seed);
-  }
+  actual = string$_I64(7, 48);
+  assert_equals_Str_Str("0000000", actual);
+  free(actual);
 
-  if (seed != 0.0) {
-    last_number = (double) rand() / (RAND_MAX + 1);
-  }
-  
-  return last_number;
+  actual = string$_Str(0, "abc");
+  assert_equals_Str_Str("", actual);
+  free(actual);
+
+  actual = string$_Str(2, "abc");
+  assert_equals_Str_Str("aa", actual);
+  free(actual);
+
+  actual = string$_Str(5, "Ö");
+  assert_equals_Str_Str("ÖÖÖÖÖ", actual);
+  free(actual);
 }

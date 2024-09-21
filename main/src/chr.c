@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Johan Dykstrom
+ * Copyright (C) 2024 Johan Dykstrom
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,34 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <math.h>
+#include <inttypes.h>
+#include <stdio.h>
 #include <stdlib.h>
 
-#include "randomize_rnd.h"
+#include "chr.h"
 
-// The last number returned
-static double last_number = 0.0;
-
-void randomize(double seed) {
-  // Add 32768 to get a better range from interactive seed
-  seed += 32768;
-  // Multiply by 1000 to get a better range from timer seed
-  seed *= 1000;
-  srand(fabs(seed));
-}
-
-double rnd() {
-  return rnd_F64(1.0);
-}
-
-double rnd_F64(double seed) {
-  if (seed < 0.0) {
-    randomize(seed);
+char* chr$(int64_t code) {
+  if (code < 0 || code > 255) {
+    printf("Error: Illegal function call: chr$(%" PRId64 ")", code);
+    exit(1);
   }
 
-  if (seed != 0.0) {
-    last_number = (double) rand() / (RAND_MAX + 1);
-  }
-  
-  return last_number;
+  char *result = (char *) malloc(2);
+  result[0] = code;
+  result[1] = 0;
+  return result;
 }

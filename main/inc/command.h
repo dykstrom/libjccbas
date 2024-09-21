@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Johan Dykstrom
+ * Copyright (C) 2024 Johan Dykstrom
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,34 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <math.h>
-#include <stdlib.h>
+#ifndef COMMAND_H_
+#define COMMAND_H_
 
-#include "randomize_rnd.h"
+// Returns the command line used to invoke the program. This function
+// allocates memory. It is the caller's responsibility to free this memory.
+char *command$();
 
-// The last number returned
-static double last_number = 0.0;
-
-void randomize(double seed) {
-  // Add 32768 to get a better range from interactive seed
-  seed += 32768;
-  // Multiply by 1000 to get a better range from timer seed
-  seed *= 1000;
-  srand(fabs(seed));
-}
-
-double rnd() {
-  return rnd_F64(1.0);
-}
-
-double rnd_F64(double seed) {
-  if (seed < 0.0) {
-    randomize(seed);
-  }
-
-  if (seed != 0.0) {
-    last_number = (double) rand() / (RAND_MAX + 1);
-  }
-  
-  return last_number;
-}
+#endif /* COMMAND_H_ */

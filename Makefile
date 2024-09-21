@@ -15,15 +15,17 @@ CC_FLAGS_MAIN=-c -g -Wall -I$(MAIN_INC)
 CC_FLAGS_TEST=-c -g -Wall -I$(MAIN_INC) -I$(TEST_INC)
 
 LD=gcc
-LD_FLAGS_MAKE=-shared --enable-runtime-pseudo-reloc
+LD_FLAGS_MAKE=-shared
 LD_FLAGS_LINK=-L$(BIN) -l$(DLL_NAME)
 
 # -----------------------------------------------------------------------------
 
 HEADERS=\
 	$(MAIN_INC)/asc.h \
-	$(MAIN_INC)/cint.h \
 	$(MAIN_INC)/cdbl.h \
+	$(MAIN_INC)/chr.h \
+	$(MAIN_INC)/cint.h \
+	$(MAIN_INC)/command.h \
 	$(MAIN_INC)/date_time.h \
 	$(MAIN_INC)/fix.h \
 	$(MAIN_INC)/hex.h \
@@ -39,15 +41,19 @@ HEADERS=\
 	$(MAIN_INC)/rtrim.h \
 	$(MAIN_INC)/sgn.h \
 	$(MAIN_INC)/sleep.h \
+	$(MAIN_INC)/space.h \
 	$(MAIN_INC)/str.h \
+	$(MAIN_INC)/stringd.h \
 	$(MAIN_INC)/timer.h \
 	\
 	$(TEST_INC)/assert.h
 
 MAIN_OBJS=\
 	$(BIN)/asc.o \
-	$(BIN)/cint.o \
 	$(BIN)/cdbl.o \
+	$(BIN)/chr.o \
+	$(BIN)/cint.o \
+	$(BIN)/command.o \
 	$(BIN)/date_time.o \
 	$(BIN)/fix.o \
 	$(BIN)/hex.o \
@@ -63,13 +69,17 @@ MAIN_OBJS=\
 	$(BIN)/rtrim.o \
 	$(BIN)/sgn.o \
 	$(BIN)/sleep.o \
+	$(BIN)/space.o \
 	$(BIN)/str.o \
+	$(BIN)/stringd.o \
 	$(BIN)/timer.o
 
 TEST_EXES=\
 	$(BIN)/test_asc.exe \
-	$(BIN)/test_cint.exe \
 	$(BIN)/test_cdbl.exe \
+	$(BIN)/test_chr.exe \
+	$(BIN)/test_cint.exe \
+	$(BIN)/test_command.exe \
 	$(BIN)/test_date_time.exe \
 	$(BIN)/test_fix.exe \
 	$(BIN)/test_hex.exe \
@@ -85,7 +95,9 @@ TEST_EXES=\
 	$(BIN)/test_rtrim.exe \
 	$(BIN)/test_sgn.exe \
 	$(BIN)/test_sleep.exe \
+	$(BIN)/test_space.exe \
 	$(BIN)/test_str.exe \
+	$(BIN)/test_stringd.exe \
 	$(BIN)/test_timer.exe
 
 # -----------------------------------------------------------------------------
