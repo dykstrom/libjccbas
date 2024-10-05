@@ -4,7 +4,7 @@
 
   <groupId>se.dykstrom.jcc</groupId>
   <artifactId>jccbasic</artifactId>
-  <version>1.4.1-SNAPSHOT</version>
+  <version>1.5.0</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -12,7 +12,7 @@
 
   <scm>
     <developerConnection>scm:git:https://github.com/dykstrom/jccbasic.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>jccbasic-1.5.0</tag>
   </scm>
 
   <build>
