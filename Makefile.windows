@@ -1,0 +1,43 @@
+# Windows platform configuration (x86_64, GCC)
+
+LIB_NAME=jccbasic
+LIB=$(BIN)/$(LIB_NAME).dll
+LIB_EXT=.dll
+EXE_EXT=.exe
+
+CC=gcc
+CC_FLAGS_MAIN=-c -g -Wall -I$(MAIN_INC)
+CC_FLAGS_TEST=-c -g -Wall -I$(MAIN_INC) -I$(TEST_INC)
+
+LD=gcc
+LD_FLAGS_MAKE=-shared
+LD_FLAGS_LINK=-L$(BIN) -l$(LIB_NAME)
+
+AR=ar
+AR_FLAGS=rcs
+
+TEST_EXES=$(patsubst %,$(BIN)/%$(EXE_EXT),$(TEST_NAMES))
+
+.PHONY: all clean
+
+.PRECIOUS: $(BIN)/%.o
+
+all: $(BIN) $(LIB) $(TEST_EXES)
+
+clean:
+	-rm -rf $(BIN)
+
+$(BIN):
+	-mkdir $(BIN)
+
+$(BIN)/%.o: $(MAIN_SRC)/%.c $(HEADERS)
+	$(CC) -o $@ $(CC_FLAGS_MAIN) $<
+
+$(LIB): $(MAIN_OBJS)
+	$(LD) -o $@ $(LD_FLAGS_MAKE) $^
+
+$(BIN)/%.o: $(TEST_SRC)/%.c $(HEADERS) $(LIB)
+	$(CC) -o $@ $(CC_FLAGS_TEST) $<
+
+$(BIN)/%$(EXE_EXT): $(BIN)/%.o
+	$(LD) -o $@ $(LD_FLAGS_LINK) $<

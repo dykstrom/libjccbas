@@ -1,0 +1,88 @@
+# Common variables and file lists shared across all platforms
+
+MAIN_INC=main/inc
+MAIN_SRC=main/src
+TEST_INC=test/inc
+TEST_SRC=test/src
+
+BIN=bin
+
+HEADERS=\
+	$(MAIN_INC)/asc.h \
+	$(MAIN_INC)/cdbl.h \
+	$(MAIN_INC)/chr.h \
+	$(MAIN_INC)/cint.h \
+	$(MAIN_INC)/command.h \
+	$(MAIN_INC)/date_time.h \
+	$(MAIN_INC)/fix.h \
+	$(MAIN_INC)/hex.h \
+	$(MAIN_INC)/inkey.h \
+	$(MAIN_INC)/int.h \
+	$(MAIN_INC)/jccbasic_version.h \
+	$(MAIN_INC)/lbound_ubound.h \
+	$(MAIN_INC)/ltrim.h \
+	$(MAIN_INC)/mkd_cvd.h \
+	$(MAIN_INC)/mki_cvi.h \
+	$(MAIN_INC)/oct.h \
+	$(MAIN_INC)/randomize_rnd.h \
+	$(MAIN_INC)/rtrim.h \
+	$(MAIN_INC)/sgn.h \
+	$(MAIN_INC)/sleep.h \
+	$(MAIN_INC)/space.h \
+	$(MAIN_INC)/str.h \
+	$(MAIN_INC)/stringd.h \
+	$(MAIN_INC)/timer.h \
+	\
+	$(TEST_INC)/assert.h
+
+MAIN_OBJS=\
+	$(BIN)/asc.o \
+	$(BIN)/cdbl.o \
+	$(BIN)/chr.o \
+	$(BIN)/cint.o \
+	$(BIN)/command.o \
+	$(BIN)/date_time.o \
+	$(BIN)/fix.o \
+	$(BIN)/hex.o \
+	$(BIN)/inkey.o \
+	$(BIN)/int.o \
+	$(BIN)/jccbasic_version.o \
+	$(BIN)/lbound_ubound.o \
+	$(BIN)/ltrim.o \
+	$(BIN)/mkd_cvd.o \
+	$(BIN)/mki_cvi.o \
+	$(BIN)/oct.o \
+	$(BIN)/randomize_rnd.o \
+	$(BIN)/rtrim.o \
+	$(BIN)/sgn.o \
+	$(BIN)/sleep.o \
+	$(BIN)/space.o \
+	$(BIN)/str.o \
+	$(BIN)/stringd.o \
+	$(BIN)/timer.o
+
+TEST_NAMES=\
+	test_asc \
+	test_cdbl \
+	test_chr \
+	test_cint \
+	test_command \
+	test_date_time \
+	test_fix \
+	test_hex \
+	test_inkey \
+	test_int \
+	test_jccbasic_version \
+	test_lbound_ubound \
+	test_ltrim \
+	test_mkd_cvd \
+	test_mki_cvi \
+	test_oct \
+	test_randomize_rnd \
+	test_rtrim \
+	test_sgn \
+	test_sleep \
+	test_space \
+	test_str \
+	test_stringd \
+	test_timer

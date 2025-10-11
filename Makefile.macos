@@ -1,0 +1,43 @@
+# macOS platform configuration (Clang/LLVM, native architecture)
+
+LIB_NAME=libjccbas
+LIB=$(BIN)/$(LIB_NAME).a
+LIB_EXT=.a
+EXE_EXT=
+
+CC=clang
+CC_FLAGS_MAIN=-c -g -Wall -I$(MAIN_INC)
+CC_FLAGS_TEST=-c -g -Wall -I$(MAIN_INC) -I$(TEST_INC)
+
+LD=clang
+LD_FLAGS_MAKE=
+LD_FLAGS_LINK=-L$(BIN) $(LIB)
+
+AR=ar
+AR_FLAGS=rcs
+
+TEST_EXES=$(patsubst %,$(BIN)/%$(EXE_EXT),$(TEST_NAMES))
+
+.PHONY: all clean
+
+.PRECIOUS: $(BIN)/%.o
+
+all: $(BIN) $(LIB) $(TEST_EXES)
+
+clean:
+	-rm -rf $(BIN)
+
+$(BIN):
+	-mkdir -p $(BIN)
+
+$(BIN)/%.o: $(MAIN_SRC)/%.c $(HEADERS)
+	$(CC) -o $@ $(CC_FLAGS_MAIN) $<
+
+$(LIB): $(MAIN_OBJS)
+	$(AR) $(AR_FLAGS) $@ $^
+
+$(BIN)/%.o: $(TEST_SRC)/%.c $(HEADERS) $(LIB)
+	$(CC) -o $@ $(CC_FLAGS_TEST) $<
+
+$(BIN)/%$(EXE_EXT): $(BIN)/%.o
+	$(LD) -o $@ $(LD_FLAGS_LINK) $<
