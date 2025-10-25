@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Johan Dykstrom
+ * Copyright (C) 2025 Johan Dykstrom
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <ctype.h>
-#include <stdlib.h>
-#include <string.h>
+#ifndef POS_H_
+#define POS_H_
 
-#include "ltrim.h"
+#include <stdint.h>
 
-char* ltrim$(const char* s) {
-  while ((s[0] != 0) && isspace(s[0])) {
-    s++;
-  }
-  char* result = malloc(strlen(s) + 1);
-  return strcpy(result, s);
-}
+// Returns the current column position of the cursor (1-based).
+// The dummy parameter is ignored and exists for QB compatibility.
+int64_t pos(int64_t dummy);
+
+#endif /* POS_H_ */

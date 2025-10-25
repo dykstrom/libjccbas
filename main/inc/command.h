@@ -22,4 +22,10 @@
 // allocates memory. It is the caller's responsibility to free this memory.
 char *command$();
 
+#ifndef _WIN32
+// On Unix-like systems, this function should be called from main() to initialize
+// the command line. On Windows, this is not needed as GetCommandLineA() is used.
+void init_command_line(int argc, char *argv[]);
+#endif
+
 #endif /* COMMAND_H_ */

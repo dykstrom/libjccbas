@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # shellcheck disable=SC2039
 
@@ -6,13 +6,26 @@ DIR=bin
 
 if [ -d $DIR ]; then
     pushd $DIR > /dev/null || exit
-    
-    files=$(ls -- *.exe)
+
+    # Detect platform using same logic as Makefile
+    UNAME_S=$(uname -s 2>/dev/null || echo "Windows")
+
+    case "$UNAME_S" in
+        Darwin|Linux)
+            # macOS or Linux - look for test_* files without extension (skip .o files)
+            files=$(find . -maxdepth 1 -type f -name "test_*" ! -name "*.o" 2>/dev/null | sed 's|^\./||')
+            ;;
+        *)
+            # Windows (or other) - look for .exe files
+            files=$(ls -- *.exe 2>/dev/null)
+            ;;
+    esac
+
     for file in $files; do
         echo "$file"
         ./"$file"
     done
-    
+
     popd > /dev/null || exit
 else
     echo Directory \'$DIR\' does not exist >&2

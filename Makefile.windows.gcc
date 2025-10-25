@@ -1,0 +1,45 @@
+# Windows GCC configuration (x86_64, produces jccbasic.dll)
+
+LIB_NAME=jccbasic
+LIB=$(BIN_GCC)/$(LIB_NAME).dll
+LIB_EXT=.dll
+EXE_EXT=.exe
+
+CC=gcc
+CC_FLAGS_MAIN=-c -g -Wall -I$(MAIN_INC)
+CC_FLAGS_TEST=-c -g -Wall -I$(MAIN_INC) -I$(TEST_INC)
+
+LD=gcc
+LD_FLAGS_MAKE=-shared
+LD_FLAGS_LINK=-L$(BIN_GCC) -l$(LIB_NAME)
+
+AR=ar
+AR_FLAGS=rcs
+
+# GCC-specific object files
+MAIN_OBJS_GCC=$(patsubst $(BIN)/%,$(BIN_GCC)/%,$(MAIN_OBJS))
+TEST_EXES_GCC=$(patsubst %,$(BIN_GCC)/%$(EXE_EXT),$(TEST_NAMES))
+
+.PHONY: all-gcc clean-gcc
+
+.PRECIOUS: $(BIN_GCC)/%.o
+
+all-gcc: $(BIN_GCC) $(LIB) $(TEST_EXES_GCC)
+
+clean-gcc:
+	-rm -rf $(BIN_GCC)
+
+$(BIN_GCC):
+	-mkdir $(BIN_GCC)
+
+$(BIN_GCC)/%.o: $(MAIN_SRC)/%.c $(HEADERS)
+	$(CC) -o $@ $(CC_FLAGS_MAIN) $<
+
+$(LIB): $(MAIN_OBJS_GCC)
+	$(LD) -o $@ $(LD_FLAGS_MAKE) $^
+
+$(BIN_GCC)/%.o: $(TEST_SRC)/%.c $(HEADERS) $(LIB)
+	$(CC) -o $@ $(CC_FLAGS_TEST) $<
+
+$(BIN_GCC)/%$(EXE_EXT): $(BIN_GCC)/%.o
+	$(LD) -o $@ $(LD_FLAGS_LINK) $<

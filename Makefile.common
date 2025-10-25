@@ -8,81 +8,114 @@ TEST_SRC=test/src
 BIN=bin
 
 HEADERS=\
+	$(MAIN_INC)/add.h \
 	$(MAIN_INC)/asc.h \
 	$(MAIN_INC)/cdbl.h \
 	$(MAIN_INC)/chr.h \
 	$(MAIN_INC)/cint.h \
 	$(MAIN_INC)/command.h \
+	$(MAIN_INC)/csrlin.h \
 	$(MAIN_INC)/date_time.h \
 	$(MAIN_INC)/fix.h \
 	$(MAIN_INC)/hex.h \
 	$(MAIN_INC)/inkey.h \
+	$(MAIN_INC)/instr.h \
 	$(MAIN_INC)/int.h \
 	$(MAIN_INC)/jccbasic_version.h \
+	$(MAIN_INC)/kbd_util.h \
 	$(MAIN_INC)/lbound_ubound.h \
+	$(MAIN_INC)/lcase.h \
+	$(MAIN_INC)/left.h \
 	$(MAIN_INC)/ltrim.h \
+	$(MAIN_INC)/mid.h \
 	$(MAIN_INC)/mkd_cvd.h \
 	$(MAIN_INC)/mki_cvi.h \
 	$(MAIN_INC)/oct.h \
+	$(MAIN_INC)/pos.h \
 	$(MAIN_INC)/randomize_rnd.h \
+	$(MAIN_INC)/right.h \
 	$(MAIN_INC)/rtrim.h \
+	$(MAIN_INC)/screen_util.h \
 	$(MAIN_INC)/sgn.h \
 	$(MAIN_INC)/sleep.h \
 	$(MAIN_INC)/space.h \
 	$(MAIN_INC)/str.h \
 	$(MAIN_INC)/stringd.h \
+	$(MAIN_INC)/time_util.h \
 	$(MAIN_INC)/timer.h \
+	$(MAIN_INC)/ucase.h \
 	\
 	$(TEST_INC)/assert.h
 
 MAIN_OBJS=\
+	$(BIN)/add.o \
 	$(BIN)/asc.o \
 	$(BIN)/cdbl.o \
 	$(BIN)/chr.o \
 	$(BIN)/cint.o \
 	$(BIN)/command.o \
+	$(BIN)/csrlin.o \
 	$(BIN)/date_time.o \
 	$(BIN)/fix.o \
 	$(BIN)/hex.o \
 	$(BIN)/inkey.o \
+	$(BIN)/instr.o \
 	$(BIN)/int.o \
 	$(BIN)/jccbasic_version.o \
+	$(BIN)/kbd_util.o \
 	$(BIN)/lbound_ubound.o \
+	$(BIN)/lcase.o \
+	$(BIN)/left.o \
 	$(BIN)/ltrim.o \
+	$(BIN)/mid.o \
 	$(BIN)/mkd_cvd.o \
 	$(BIN)/mki_cvi.o \
 	$(BIN)/oct.o \
+	$(BIN)/pos.o \
 	$(BIN)/randomize_rnd.o \
+	$(BIN)/right.o \
 	$(BIN)/rtrim.o \
+	$(BIN)/screen_util.o \
 	$(BIN)/sgn.o \
 	$(BIN)/sleep.o \
 	$(BIN)/space.o \
 	$(BIN)/str.o \
 	$(BIN)/stringd.o \
-	$(BIN)/timer.o
+	$(BIN)/time_util.o \
+	$(BIN)/timer.o \
+	$(BIN)/ucase.o
 
 TEST_NAMES=\
+	test_add \
 	test_asc \
 	test_cdbl \
 	test_chr \
 	test_cint \
 	test_command \
+	test_csrlin \
 	test_date_time \
 	test_fix \
 	test_hex \
 	test_inkey \
+	test_instr \
 	test_int \
 	test_jccbasic_version \
 	test_lbound_ubound \
+	test_lcase \
+	test_left \
 	test_ltrim \
+	test_mid \
 	test_mkd_cvd \
 	test_mki_cvi \
 	test_oct \
+	test_pos \
 	test_randomize_rnd \
+	test_right \
 	test_rtrim \
 	test_sgn \
 	test_sleep \
 	test_space \
 	test_str \
 	test_stringd \
-	test_timer
+	test_timer \
+	test_ucase

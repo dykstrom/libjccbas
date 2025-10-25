@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Johan Dykstrom
+ * Copyright (C) 2025 Johan Dykstrom
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <ctype.h>
-#include <stdlib.h>
-#include <string.h>
+#ifndef _WIN32
 
-#include "ltrim.h"
+#include <sys/time.h>
 
-char* ltrim$(const char* s) {
-  while ((s[0] != 0) && isspace(s[0])) {
-    s++;
-  }
-  char* result = malloc(strlen(s) + 1);
-  return strcpy(result, s);
+#include "time_util.h"
+
+unsigned _getsystime(struct tm *t)
+{
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  localtime_r(&tv.tv_sec, t);
+  return tv.tv_usec / 1000; // Convert microseconds to milliseconds
 }
+
+#endif

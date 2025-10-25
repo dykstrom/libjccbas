@@ -11,7 +11,7 @@ CC_FLAGS_TEST=-c -g -Wall -I$(MAIN_INC) -I$(TEST_INC)
 
 LD=clang
 LD_FLAGS_MAKE=
-LD_FLAGS_LINK=-L$(BIN) $(LIB)
+LD_FLAGS_LINK=-L$(BIN) $(LIB) -lm
 
 AR=ar
 AR_FLAGS=rcs

@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "asc.h"
 #include "assert.h"
@@ -44,6 +45,12 @@ void should_wait_for_q() {
 }
 
 int main(int argc, char *argv[]) {
+  // Skip test if stdin is not a terminal (e.g., in CI/automation environments)
+  if (!isatty(STDIN_FILENO)) {
+    printf("Skipping test_inkey: stdin is not a terminal\n");
+    return 0;
+  }
+
   should_not_wait();
   //should_wait_for_q();
 }

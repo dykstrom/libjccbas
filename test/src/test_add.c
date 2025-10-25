@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Johan Dykstrom
+ * Copyright (C) 2025 Johan Dykstrom
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,33 +18,36 @@
 #include <stdlib.h>
 
 #include "assert.h"
-#include "stringd.h"
+#include "add.h"
 
-int main(int argc, char *argv[])
-{
-  char *actual;
+int main(int argc, char *argv[]) {
+  char* actual;
 
-  actual = string$_I64(0, 45);
+  actual = add_Str_Str("", "");
   assert_equals_Str_Str("", actual);
   free(actual);
 
-  actual = string$_I64(3, 97);
-  assert_equals_Str_Str("aaa", actual);
+  actual = add_Str_Str("abc", "");
+  assert_equals_Str_Str("abc", actual);
   free(actual);
 
-  actual = string$_I64(7, 48);
-  assert_equals_Str_Str("0000000", actual);
+  actual = add_Str_Str("", "def");
+  assert_equals_Str_Str("def", actual);
   free(actual);
 
-  actual = string$_Str(0, "abc");
-  assert_equals_Str_Str("", actual);
+  actual = add_Str_Str("abc", "def");
+  assert_equals_Str_Str("abcdef", actual);
   free(actual);
 
-  actual = string$_Str(2, "abc");
-  assert_equals_Str_Str("aa", actual);
+  actual = add_Str_Str("Hello, ", "world!");
+  assert_equals_Str_Str("Hello, world!", actual);
   free(actual);
 
-  actual = string$_Str(5, " ");
-  assert_equals_Str_Str("     ", actual);
+  actual = add_Str_Str("123", "456");
+  assert_equals_Str_Str("123456", actual);
+  free(actual);
+
+  actual = add_Str_Str("The quick brown fox ", "jumps over the lazy dog");
+  assert_equals_Str_Str("The quick brown fox jumps over the lazy dog", actual);
   free(actual);
 }

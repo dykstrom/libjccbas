@@ -17,14 +17,22 @@ The codebase is organized into:
 - `bin/` - Build output directory (created during build)
 - `main/assembly/` - Maven assembly descriptor for distribution packaging
 
-Each BASIC function is implemented as a separate module with its own .h/.c pair in main/ and a corresponding test_*.c in test/. The library currently contains ~25 functions including:
-- String functions: ASC, CHR$, LTRIM$, RTRIM$, SPACE$, STR$, STRING$, COMMAND$
+Each BASIC function is implemented as a separate module with its own .h/.c pair in main/ and a corresponding test_*.c in test/. The library currently contains ~30 functions including:
+- String functions: ASC, CHR$, COMMAND$, INSTR, LCASE$, LEFT$, LTRIM$, MID$, RIGHT$, RTRIM$, SPACE$, STR$, STRING$, UCASE$
 - Type conversion: CDBL, CINT, FIX, INT, MKD$, CVD, MKI$, CVI
 - Math: SGN, RANDOMIZE, RND
 - Formatting: HEX$, OCT$
 - I/O: INKEY$
+- Screen/Cursor: POS, CSRLIN
 - System: DATE$, TIME$, SLEEP, TIMER, JCCBASIC_VERSION
 - Array: LBOUND, UBOUND
+
+### Platform Utility Modules
+
+The library includes utility modules that provide cross-platform abstractions:
+- `kbd_util` - Keyboard utilities for Unix-like systems (provides _kbhit, _getch, Sleep to match Windows conio.h)
+- `time_util` - Time utilities for Unix-like systems (provides _getsystime)
+- `screen_util` - Screen/cursor utilities for all platforms (provides get_cursor_position for POS/CSRLIN)
 
 ## Build System
 
@@ -133,6 +141,13 @@ When adding a new BASIC function to the library:
 5. Add the object file to MAIN_OBJS list in Makefile.common
 6. Add the test executable to TEST_EXES list in Makefile.common
 7. Run `make` to build and `./run_all_tests.sh` to verify
+
+### Platform-Specific Implementations
+
+For functions requiring platform-specific code:
+- Use `#ifdef _WIN32` for Windows-specific code, `#else` for Unix-like systems (macOS/Linux)
+- Consider creating shared utilities (like kbd_util, time_util, screen_util) for reusable platform-specific code
+- Tests should check `isatty()` and skip gracefully when not running in appropriate environments (e.g., terminal-dependent functions)
 
 ## Code Conventions
 

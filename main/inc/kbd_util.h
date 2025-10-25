@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Johan Dykstrom
+ * Copyright (C) 2025 Johan Dykstrom
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <ctype.h>
-#include <stdlib.h>
-#include <string.h>
+#ifndef KBD_UTIL_H_
+#define KBD_UTIL_H_
 
-#include "ltrim.h"
+#ifndef _WIN32
+// Unix-like keyboard utility functions
+// These provide conio.h-like functionality on Unix systems
 
-char* ltrim$(const char* s) {
-  while ((s[0] != 0) && isspace(s[0])) {
-    s++;
-  }
-  char* result = malloc(strlen(s) + 1);
-  return strcpy(result, s);
-}
+// Check if a key has been pressed (non-blocking)
+int _kbhit(void);
+
+// Get a character from keyboard without echo
+int _getch(void);
+
+// Sleep for specified milliseconds
+void Sleep(unsigned int milliseconds);
+
+#endif
+
+#endif /* KBD_UTIL_H_ */

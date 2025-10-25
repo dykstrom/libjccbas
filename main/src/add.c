@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Johan Dykstrom
+ * Copyright (C) 2025 Johan Dykstrom
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,35 +16,17 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 
-#include "assert.h"
-#include "stringd.h"
+#include "add.h"
 
-int main(int argc, char *argv[])
-{
-  char *actual;
+char* add_Str_Str(const char* s1, const char* s2) {
+  size_t len1 = strlen(s1);
+  size_t len2 = strlen(s2);
 
-  actual = string$_I64(0, 45);
-  assert_equals_Str_Str("", actual);
-  free(actual);
+  char* result = malloc(len1 + len2 + 1);
+  strcpy(result, s1);
+  strcat(result, s2);
 
-  actual = string$_I64(3, 97);
-  assert_equals_Str_Str("aaa", actual);
-  free(actual);
-
-  actual = string$_I64(7, 48);
-  assert_equals_Str_Str("0000000", actual);
-  free(actual);
-
-  actual = string$_Str(0, "abc");
-  assert_equals_Str_Str("", actual);
-  free(actual);
-
-  actual = string$_Str(2, "abc");
-  assert_equals_Str_Str("aa", actual);
-  free(actual);
-
-  actual = string$_Str(5, " ");
-  assert_equals_Str_Str("     ", actual);
-  free(actual);
+  return result;
 }

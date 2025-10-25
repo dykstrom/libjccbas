@@ -41,8 +41,8 @@ double rnd_F64(double seed) {
   }
 
   if (seed != 0.0) {
-    last_number = (double) rand() / (RAND_MAX + 1);
+    last_number = (double) rand() / ((double) RAND_MAX + 1.0);
   }
-  
+
   return last_number;
 }

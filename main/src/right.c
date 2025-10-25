@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Johan Dykstrom
+ * Copyright (C) 2025 Johan Dykstrom
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,36 +15,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <inttypes.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#include "assert.h"
-#include "stringd.h"
+#include "right.h"
 
-int main(int argc, char *argv[])
-{
-  char *actual;
+char* right$(const char* s, int64_t n) {
+  if (n < 0) {
+    printf("Error: Illegal function call: right$(\"%s\", %" PRId64 ")", s, n);
+    exit(1);
+  }
 
-  actual = string$_I64(0, 45);
-  assert_equals_Str_Str("", actual);
-  free(actual);
+  if (n == 0) {
+    char* result = malloc(1);
+    result[0] = '\0';
+    return result;
+  }
 
-  actual = string$_I64(3, 97);
-  assert_equals_Str_Str("aaa", actual);
-  free(actual);
+  size_t len = strlen(s);
+  size_t copy_len = (size_t)n < len ? (size_t)n : len;
+  size_t start_pos = len - copy_len;
 
-  actual = string$_I64(7, 48);
-  assert_equals_Str_Str("0000000", actual);
-  free(actual);
+  char* result = malloc(copy_len + 1);
+  strcpy(result, s + start_pos);
 
-  actual = string$_Str(0, "abc");
-  assert_equals_Str_Str("", actual);
-  free(actual);
-
-  actual = string$_Str(2, "abc");
-  assert_equals_Str_Str("aa", actual);
-  free(actual);
-
-  actual = string$_Str(5, " ");
-  assert_equals_Str_Str("     ", actual);
-  free(actual);
+  return result;
 }

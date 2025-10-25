@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Johan Dykstrom
+ * Copyright (C) 2025 Johan Dykstrom
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <ctype.h>
-#include <stdlib.h>
-#include <string.h>
+#ifndef SCREEN_UTIL_H_
+#define SCREEN_UTIL_H_
 
-#include "ltrim.h"
+#include <stdbool.h>
 
-char* ltrim$(const char* s) {
-  while ((s[0] != 0) && isspace(s[0])) {
-    s++;
-  }
-  char* result = malloc(strlen(s) + 1);
-  return strcpy(result, s);
-}
+// Get current cursor position (1-based coordinates)
+// Returns true on success, false on failure
+// On success, *row and *col are set to the cursor position
+// On failure, *row and *col are set to 1
+bool get_cursor_position(int *row, int *col);
+
+#endif /* SCREEN_UTIL_H_ */

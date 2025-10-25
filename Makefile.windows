@@ -1,43 +1,20 @@
-# Windows platform configuration (x86_64, GCC)
+# Windows platform configuration (x86_64)
+# Builds both:
+#   - jccbasic.dll with GCC
+#   - libjccbas.a with Clang
 
-LIB_NAME=jccbasic
-LIB=$(BIN)/$(LIB_NAME).dll
-LIB_EXT=.dll
-EXE_EXT=.exe
+# Separate bin directories for each toolchain
+BIN_GCC=$(BIN)/gcc
+BIN_CLANG=$(BIN)/clang
 
-CC=gcc
-CC_FLAGS_MAIN=-c -g -Wall -I$(MAIN_INC)
-CC_FLAGS_TEST=-c -g -Wall -I$(MAIN_INC) -I$(TEST_INC)
+.PHONY: all clean all-gcc all-clang clean-gcc clean-clang
 
-LD=gcc
-LD_FLAGS_MAKE=-shared
-LD_FLAGS_LINK=-L$(BIN) -l$(LIB_NAME)
+all: all-gcc all-clang
 
-AR=ar
-AR_FLAGS=rcs
+clean: clean-gcc clean-clang
 
-TEST_EXES=$(patsubst %,$(BIN)/%$(EXE_EXT),$(TEST_NAMES))
+# Include GCC-specific configuration
+include Makefile.windows.gcc
 
-.PHONY: all clean
-
-.PRECIOUS: $(BIN)/%.o
-
-all: $(BIN) $(LIB) $(TEST_EXES)
-
-clean:
-	-rm -rf $(BIN)
-
-$(BIN):
-	-mkdir $(BIN)
-
-$(BIN)/%.o: $(MAIN_SRC)/%.c $(HEADERS)
-	$(CC) -o $@ $(CC_FLAGS_MAIN) $<
-
-$(LIB): $(MAIN_OBJS)
-	$(LD) -o $@ $(LD_FLAGS_MAKE) $^
-
-$(BIN)/%.o: $(TEST_SRC)/%.c $(HEADERS) $(LIB)
-	$(CC) -o $@ $(CC_FLAGS_TEST) $<
-
-$(BIN)/%$(EXE_EXT): $(BIN)/%.o
-	$(LD) -o $@ $(LD_FLAGS_LINK) $<
+# Include Clang-specific configuration
+include Makefile.windows.clang

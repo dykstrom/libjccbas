@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Johan Dykstrom
+ * Copyright (C) 2025 Johan Dykstrom
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,33 +18,43 @@
 #include <stdlib.h>
 
 #include "assert.h"
-#include "stringd.h"
+#include "lcase.h"
 
-int main(int argc, char *argv[])
-{
-  char *actual;
+int main(int argc, char *argv[]) {
+  char* actual;
 
-  actual = string$_I64(0, 45);
+  // Test with empty string
+  actual = lcase$("");
   assert_equals_Str_Str("", actual);
   free(actual);
 
-  actual = string$_I64(3, 97);
-  assert_equals_Str_Str("aaa", actual);
+  // Test with lowercase string
+  actual = lcase$("hello");
+  assert_equals_Str_Str("hello", actual);
   free(actual);
 
-  actual = string$_I64(7, 48);
-  assert_equals_Str_Str("0000000", actual);
+  // Test with uppercase string
+  actual = lcase$("HELLO");
+  assert_equals_Str_Str("hello", actual);
   free(actual);
 
-  actual = string$_Str(0, "abc");
-  assert_equals_Str_Str("", actual);
+  // Test with mixed case string
+  actual = lcase$("Hello World");
+  assert_equals_Str_Str("hello world", actual);
   free(actual);
 
-  actual = string$_Str(2, "abc");
-  assert_equals_Str_Str("aa", actual);
+  // Test with numbers and symbols
+  actual = lcase$("ABC123xyz!@#");
+  assert_equals_Str_Str("abc123xyz!@#", actual);
   free(actual);
 
-  actual = string$_Str(5, " ");
-  assert_equals_Str_Str("     ", actual);
+  // Test with all uppercase
+  actual = lcase$("QUICKBASIC");
+  assert_equals_Str_Str("quickbasic", actual);
+  free(actual);
+
+  // Test with single character
+  actual = lcase$("A");
+  assert_equals_Str_Str("a", actual);
   free(actual);
 }

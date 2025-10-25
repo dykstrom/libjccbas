@@ -18,6 +18,7 @@
 #include <time.h>
 
 #include "timer.h"
+#include "time_util.h"
 
 double timer() {
   struct tm t;

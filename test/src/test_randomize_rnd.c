@@ -101,6 +101,19 @@ void seedLtZeroShouldReseedRNG() {
   assert_equals_F64_F64(expected, rnd_F64(-1.0));
 }
 
+void allNumbersShouldBeInValidRange() {
+  randomize(timer());
+  bool all_in_range = true;
+  for (int i = 0; i < MAX_NUMBERS; i++) {
+    double value = rnd();
+    if (value < 0.0 || value >= 1.0) {
+      all_in_range = false;
+      break;
+    }
+  }
+  assert_true_Bool(all_in_range);
+}
+
 int main(int argc, char *argv[]) {
   randomNumbersShouldBeRandom();
   sameSeedShouldGiveSameNumbers();
@@ -109,4 +122,5 @@ int main(int argc, char *argv[]) {
   seedEqZeroShouldReturnLastNumber();
   seedGtZeroShouldReturnNextNumber();
   seedLtZeroShouldReseedRNG();
+  allNumbersShouldBeInValidRange();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Johan Dykstrom
+ * Copyright (C) 2025 Johan Dykstrom
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <ctype.h>
-#include <stdlib.h>
-#include <string.h>
+#ifndef LEFT$_H_
+#define LEFT$_H_
 
-#include "ltrim.h"
+#include <stdint.h>
 
-char* ltrim$(const char* s) {
-  while ((s[0] != 0) && isspace(s[0])) {
-    s++;
-  }
-  char* result = malloc(strlen(s) + 1);
-  return strcpy(result, s);
-}
+// Returns a string containing the leftmost n characters of the given string.
+// If n is greater than or equal to the length of the string, the entire string is returned.
+// If n is zero, an empty string is returned.
+// If n is negative, an "Illegal function call" error is raised and the program exits.
+// This function allocates memory. It is the caller's responsibility to free this memory.
+char *left$(const char *s, int64_t n);
+
+#endif /* LEFT$_H_ */

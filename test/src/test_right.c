@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Johan Dykstrom
+ * Copyright (C) 2025 Johan Dykstrom
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,33 +18,43 @@
 #include <stdlib.h>
 
 #include "assert.h"
-#include "stringd.h"
+#include "right.h"
 
-int main(int argc, char *argv[])
-{
-  char *actual;
+int main(int argc, char *argv[]) {
+  char* actual;
 
-  actual = string$_I64(0, 45);
+  // Test with empty string
+  actual = right$("", 5);
   assert_equals_Str_Str("", actual);
   free(actual);
 
-  actual = string$_I64(3, 97);
-  assert_equals_Str_Str("aaa", actual);
-  free(actual);
-
-  actual = string$_I64(7, 48);
-  assert_equals_Str_Str("0000000", actual);
-  free(actual);
-
-  actual = string$_Str(0, "abc");
+  // Test with zero length
+  actual = right$("hello", 0);
   assert_equals_Str_Str("", actual);
   free(actual);
 
-  actual = string$_Str(2, "abc");
-  assert_equals_Str_Str("aa", actual);
+  // Test normal case - right 3 characters
+  actual = right$("hello", 3);
+  assert_equals_Str_Str("llo", actual);
   free(actual);
 
-  actual = string$_Str(5, " ");
-  assert_equals_Str_Str("     ", actual);
+  // Test when n equals string length
+  actual = right$("hello", 5);
+  assert_equals_Str_Str("hello", actual);
+  free(actual);
+
+  // Test when n exceeds string length
+  actual = right$("hello", 10);
+  assert_equals_Str_Str("hello", actual);
+  free(actual);
+
+  // Test with single character
+  actual = right$("hello", 1);
+  assert_equals_Str_Str("o", actual);
+  free(actual);
+
+  // Test with longer string
+  actual = right$("QuickBASIC", 5);
+  assert_equals_Str_Str("BASIC", actual);
   free(actual);
 }

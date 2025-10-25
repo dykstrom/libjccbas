@@ -20,6 +20,7 @@
 #include <time.h>
 
 #include "date_time.h"
+#include "time_util.h"
 
 char* date$() {
   struct tm t;

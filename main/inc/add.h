@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Johan Dykstrom
+ * Copyright (C) 2025 Johan Dykstrom
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <ctype.h>
-#include <stdlib.h>
-#include <string.h>
+#ifndef ADD_H_
+#define ADD_H_
 
-#include "ltrim.h"
+// Concatenates two strings and returns the result.
+// This function is used to implement the + operator for strings.
+// This function allocates memory. It is the caller's responsibility to free this memory.
+char *add_Str_Str(const char *s1, const char *s2);
 
-char* ltrim$(const char* s) {
-  while ((s[0] != 0) && isspace(s[0])) {
-    s++;
-  }
-  char* result = malloc(strlen(s) + 1);
-  return strcpy(result, s);
-}
+#endif /* ADD_H_ */
