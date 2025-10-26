@@ -1,45 +1,45 @@
 # Windows Clang configuration (x86_64, produces libjccbas.a)
 
-LIB_NAME=libjccbas
-LIB=$(BIN_CLANG)/$(LIB_NAME).a
-LIB_EXT=.a
-EXE_EXT=.exe
+LIB_NAME_CLANG=libjccbas
+LIB_CLANG=$(BIN_CLANG)/$(LIB_NAME_CLANG).a
+LIB_EXT_CLANG=.a
+EXE_EXT_CLANG=.exe
 
-CC=clang
-CC_FLAGS_MAIN=-c -g -Wall -I$(MAIN_INC)
-CC_FLAGS_TEST=-c -g -Wall -I$(MAIN_INC) -I$(TEST_INC)
+CC_CLANG=clang
+CC_FLAGS_MAIN_CLANG=-c -g -Wall -I$(MAIN_INC)
+CC_FLAGS_TEST_CLANG=-c -g -Wall -I$(MAIN_INC) -I$(TEST_INC)
 
-LD=clang
-LD_FLAGS_MAKE=
-LD_FLAGS_LINK=-L$(BIN_CLANG) $(LIB)
+LD_CLANG=clang
+LD_FLAGS_MAKE_CLANG=
+LD_FLAGS_LINK_CLANG=-L$(BIN_CLANG) $(LIB_CLANG)
 
-AR=llvm-ar
-AR_FLAGS=rcs
+AR_CLANG=llvm-ar
+AR_FLAGS_CLANG=rcs
 
 # Clang-specific object files
 MAIN_OBJS_CLANG=$(patsubst $(BIN)/%,$(BIN_CLANG)/%,$(MAIN_OBJS))
-TEST_EXES_CLANG=$(patsubst %,$(BIN_CLANG)/%$(EXE_EXT),$(TEST_NAMES))
+TEST_EXES_CLANG=$(patsubst %,$(BIN_CLANG)/%$(EXE_EXT_CLANG),$(TEST_NAMES))
 
 .PHONY: all-clang clean-clang
 
 .PRECIOUS: $(BIN_CLANG)/%.o
 
-all-clang: $(BIN_CLANG) $(LIB) $(TEST_EXES_CLANG)
+all-clang: $(BIN_CLANG) $(LIB_CLANG) $(TEST_EXES_CLANG)
 
 clean-clang:
 	-rm -rf $(BIN_CLANG)
 
 $(BIN_CLANG):
-	-mkdir $(BIN_CLANG)
+	-mkdir -p $(BIN_CLANG)
 
 $(BIN_CLANG)/%.o: $(MAIN_SRC)/%.c $(HEADERS)
-	$(CC) -o $@ $(CC_FLAGS_MAIN) $<
+	$(CC_CLANG) -o $@ $(CC_FLAGS_MAIN_CLANG) $<
 
-$(LIB): $(MAIN_OBJS_CLANG)
-	$(AR) $(AR_FLAGS) $@ $^
+$(LIB_CLANG): $(MAIN_OBJS_CLANG)
+	$(AR_CLANG) $(AR_FLAGS_CLANG) $@ $^
 
-$(BIN_CLANG)/%.o: $(TEST_SRC)/%.c $(HEADERS) $(LIB)
-	$(CC) -o $@ $(CC_FLAGS_TEST) $<
+$(BIN_CLANG)/%.o: $(TEST_SRC)/%.c $(HEADERS) $(LIB_CLANG)
+	$(CC_CLANG) -o $@ $(CC_FLAGS_TEST_CLANG) $<
 
-$(BIN_CLANG)/%$(EXE_EXT): $(BIN_CLANG)/%.o
-	$(LD) -o $@ $(LD_FLAGS_LINK) $<
+$(BIN_CLANG)/%$(EXE_EXT_CLANG): $(BIN_CLANG)/%.o
+	$(LD_CLANG) -o $@ $(LD_FLAGS_LINK_CLANG) $<

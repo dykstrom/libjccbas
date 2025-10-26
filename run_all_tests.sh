@@ -13,11 +13,12 @@ if [ -d $DIR ]; then
     case "$UNAME_S" in
         Darwin|Linux)
             # macOS or Linux - look for test_* files without extension (skip .o files)
-            files=$(find . -maxdepth 1 -type f -name "test_*" ! -name "*.o" 2>/dev/null | sed 's|^\./||')
+            # Check depth 1 first (for backward compatibility), then depth 2 (subdirectories)
+            files=$(find . -maxdepth 2 -type f -name "test_*" ! -name "*.o" 2>/dev/null | sed 's|^\./||')
             ;;
         *)
-            # Windows (or other) - look for .exe files
-            files=$(ls -- *.exe 2>/dev/null)
+            # Windows - look in subdirectories (gcc/ and clang/)
+            files=$(find . -maxdepth 2 -type f -name "*.exe" 2>/dev/null | sed 's|^\./||')
             ;;
     esac
 

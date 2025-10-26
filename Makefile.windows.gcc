@@ -1,45 +1,45 @@
 # Windows GCC configuration (x86_64, produces jccbasic.dll)
 
-LIB_NAME=jccbasic
-LIB=$(BIN_GCC)/$(LIB_NAME).dll
-LIB_EXT=.dll
-EXE_EXT=.exe
+LIB_NAME_GCC=jccbasic
+LIB_GCC=$(BIN_GCC)/$(LIB_NAME_GCC).dll
+LIB_EXT_GCC=.dll
+EXE_EXT_GCC=.exe
 
-CC=gcc
-CC_FLAGS_MAIN=-c -g -Wall -I$(MAIN_INC)
-CC_FLAGS_TEST=-c -g -Wall -I$(MAIN_INC) -I$(TEST_INC)
+CC_GCC=gcc
+CC_FLAGS_MAIN_GCC=-c -g -Wall -I$(MAIN_INC)
+CC_FLAGS_TEST_GCC=-c -g -Wall -I$(MAIN_INC) -I$(TEST_INC)
 
-LD=gcc
-LD_FLAGS_MAKE=-shared
-LD_FLAGS_LINK=-L$(BIN_GCC) -l$(LIB_NAME)
+LD_GCC=gcc
+LD_FLAGS_MAKE_GCC=-shared
+LD_FLAGS_LINK_GCC=-L$(BIN_GCC) -l$(LIB_NAME_GCC)
 
-AR=ar
-AR_FLAGS=rcs
+AR_GCC=ar
+AR_FLAGS_GCC=rcs
 
 # GCC-specific object files
 MAIN_OBJS_GCC=$(patsubst $(BIN)/%,$(BIN_GCC)/%,$(MAIN_OBJS))
-TEST_EXES_GCC=$(patsubst %,$(BIN_GCC)/%$(EXE_EXT),$(TEST_NAMES))
+TEST_EXES_GCC=$(patsubst %,$(BIN_GCC)/%$(EXE_EXT_GCC),$(TEST_NAMES))
 
 .PHONY: all-gcc clean-gcc
 
 .PRECIOUS: $(BIN_GCC)/%.o
 
-all-gcc: $(BIN_GCC) $(LIB) $(TEST_EXES_GCC)
+all-gcc: $(BIN_GCC) $(LIB_GCC) $(TEST_EXES_GCC)
 
 clean-gcc:
 	-rm -rf $(BIN_GCC)
 
 $(BIN_GCC):
-	-mkdir $(BIN_GCC)
+	-mkdir -p $(BIN_GCC)
 
 $(BIN_GCC)/%.o: $(MAIN_SRC)/%.c $(HEADERS)
-	$(CC) -o $@ $(CC_FLAGS_MAIN) $<
+	$(CC_GCC) -o $@ $(CC_FLAGS_MAIN_GCC) $<
 
-$(LIB): $(MAIN_OBJS_GCC)
-	$(LD) -o $@ $(LD_FLAGS_MAKE) $^
+$(LIB_GCC): $(MAIN_OBJS_GCC)
+	$(LD_GCC) -o $@ $(LD_FLAGS_MAKE_GCC) $^
 
-$(BIN_GCC)/%.o: $(TEST_SRC)/%.c $(HEADERS) $(LIB)
-	$(CC) -o $@ $(CC_FLAGS_TEST) $<
+$(BIN_GCC)/%.o: $(TEST_SRC)/%.c $(HEADERS) $(LIB_GCC)
+	$(CC_GCC) -o $@ $(CC_FLAGS_TEST_GCC) $<
 
-$(BIN_GCC)/%$(EXE_EXT): $(BIN_GCC)/%.o
-	$(LD) -o $@ $(LD_FLAGS_LINK) $<
+$(BIN_GCC)/%$(EXE_EXT_GCC): $(BIN_GCC)/%.o
+	$(LD_GCC) -o $@ $(LD_FLAGS_LINK_GCC) $<
