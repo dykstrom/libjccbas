@@ -42,4 +42,4 @@ $(BIN_GCC)/%.o: $(TEST_SRC)/%.c $(HEADERS) $(LIB_GCC)
 	$(CC_GCC) -o $@ $(CC_FLAGS_TEST_GCC) $<
 
 $(BIN_GCC)/%$(EXE_EXT_GCC): $(BIN_GCC)/%.o
-	$(LD_GCC) -o $@ $(LD_FLAGS_LINK_GCC) $<
+	$(LD_GCC) -o $@ $< $(LD_FLAGS_LINK_GCC)

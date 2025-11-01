@@ -42,4 +42,4 @@ $(BIN_CLANG)/%.o: $(TEST_SRC)/%.c $(HEADERS) $(LIB_CLANG)
 	$(CC_CLANG) -o $@ $(CC_FLAGS_TEST_CLANG) $<
 
 $(BIN_CLANG)/%$(EXE_EXT_CLANG): $(BIN_CLANG)/%.o
-	$(LD_CLANG) -o $@ $(LD_FLAGS_LINK_CLANG) $<
+	$(LD_CLANG) -o $@ $< $(LD_FLAGS_LINK_CLANG)

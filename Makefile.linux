@@ -44,4 +44,4 @@ $(BIN_CLANG)/%.o: $(TEST_SRC)/%.c $(HEADERS) $(LIB)
 	$(CC) -o $@ $(CC_FLAGS_TEST) $<
 
 $(BIN_CLANG)/%$(EXE_EXT): $(BIN_CLANG)/%.o
-	$(LD) -o $@ $(LD_FLAGS_LINK) $<
+	$(LD) -o $@ $< $(LD_FLAGS_LINK)
