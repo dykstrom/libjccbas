@@ -1,6 +1,6 @@
 # libjccbas
 
-[![Build and Package](https://github.com/dykstrom/libjccbas/actions/workflows/build.yml/badge.svg)](https://github.com/dykstrom/libjccbas/actions/workflows/build.yml)
+[![build](https://github.com/dykstrom/libjccbas/actions/workflows/build.yml/badge.svg)](https://github.com/dykstrom/libjccbas/actions/workflows/build.yml)
 [![Open Issues](https://img.shields.io/github/issues/dykstrom/libjccbas)](https://github.com/dykstrom/libjccbas/issues)
 [![Latest Release](https://img.shields.io/github/v/release/dykstrom/libjccbas?display_name=release)](https://github.com/dykstrom/libjccbas/releases)
 ![Downloads](https://img.shields.io/github/downloads/dykstrom/libjccbas/total)
