@@ -1,6 +1,6 @@
 # Windows platform configuration (x86_64)
 # Builds both:
-#   - jccbasic.dll with GCC
+#   - libjccbas.dll with GCC
 #   - libjccbas.a with Clang
 
 # Separate bin directories for each toolchain

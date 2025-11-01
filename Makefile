@@ -1,6 +1,6 @@
-# Multi-platform Makefile for jccbasic
+# Multi-platform Makefile for libjccbas
 # Supports:
-#   - Windows x86_64 with GCC (produces jccbasic.dll)
+#   - Windows x86_64 with GCC (produces libjccbas.dll) and Clang (produces libjccbas.a)
 #   - macOS x86_64/arm64 with Clang (produces libjccbas.a)
 #   - Linux x86_64/arm64 with Clang (produces libjccbas.a)
 

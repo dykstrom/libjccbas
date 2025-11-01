@@ -1,6 +1,6 @@
-# Windows GCC configuration (x86_64, produces jccbasic.dll)
+# Windows GCC configuration (x86_64, produces libjccbas.dll)
 
-LIB_NAME_GCC=jccbasic
+LIB_NAME_GCC=libjccbas
 LIB_GCC=$(BIN_GCC)/$(LIB_NAME_GCC).dll
 LIB_EXT_GCC=.dll
 EXE_EXT_GCC=.exe

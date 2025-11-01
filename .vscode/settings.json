@@ -2,5 +2,6 @@
   "files.associations": {
     "command.h": "c",
     "add.h": "c"
-  }
+  },
+  "java.configuration.updateBuildConfiguration": "automatic"
 }

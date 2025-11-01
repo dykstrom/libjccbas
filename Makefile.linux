@@ -1,7 +1,9 @@
 # Linux platform configuration (Clang/LLVM, native architecture)
 
+BIN_CLANG=$(BIN)/clang
+
 LIB_NAME=libjccbas
-LIB=$(BIN)/$(LIB_NAME).a
+LIB=$(BIN_CLANG)/$(LIB_NAME).a
 LIB_EXT=.a
 EXE_EXT=
 
@@ -11,33 +13,35 @@ CC_FLAGS_TEST=-c -g -Wall -I$(MAIN_INC) -I$(TEST_INC)
 
 LD=clang
 LD_FLAGS_MAKE=
-LD_FLAGS_LINK=-L$(BIN) $(LIB) -lm
+LD_FLAGS_LINK=-L$(BIN_CLANG) $(LIB) -lm
 
 AR=ar
 AR_FLAGS=rcs
 
-TEST_EXES=$(patsubst %,$(BIN)/%$(EXE_EXT),$(TEST_NAMES))
+# Clang-specific object files
+MAIN_OBJS_CLANG=$(patsubst $(BIN)/%,$(BIN_CLANG)/%,$(MAIN_OBJS))
+TEST_EXES=$(patsubst %,$(BIN_CLANG)/%$(EXE_EXT),$(TEST_NAMES))
 
 .PHONY: all clean
 
-.PRECIOUS: $(BIN)/%.o
+.PRECIOUS: $(BIN_CLANG)/%.o
 
-all: $(BIN) $(LIB) $(TEST_EXES)
+all: $(BIN_CLANG) $(LIB) $(TEST_EXES)
 
 clean:
 	-rm -rf $(BIN)
 
-$(BIN):
-	-mkdir -p $(BIN)
+$(BIN_CLANG):
+	-mkdir -p $(BIN_CLANG)
 
-$(BIN)/%.o: $(MAIN_SRC)/%.c $(HEADERS)
+$(BIN_CLANG)/%.o: $(MAIN_SRC)/%.c $(HEADERS)
 	$(CC) -o $@ $(CC_FLAGS_MAIN) $<
 
-$(LIB): $(MAIN_OBJS)
+$(LIB): $(MAIN_OBJS_CLANG)
 	$(AR) $(AR_FLAGS) $@ $^
 
-$(BIN)/%.o: $(TEST_SRC)/%.c $(HEADERS) $(LIB)
+$(BIN_CLANG)/%.o: $(TEST_SRC)/%.c $(HEADERS) $(LIB)
 	$(CC) -o $@ $(CC_FLAGS_TEST) $<
 
-$(BIN)/%$(EXE_EXT): $(BIN)/%.o
+$(BIN_CLANG)/%$(EXE_EXT): $(BIN_CLANG)/%.o
 	$(LD) -o $@ $(LD_FLAGS_LINK) $<

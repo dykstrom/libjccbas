@@ -22,7 +22,6 @@ HEADERS=\
 	$(MAIN_INC)/instr.h \
 	$(MAIN_INC)/int.h \
 	$(MAIN_INC)/jccbasic_version.h \
-	$(MAIN_INC)/kbd_util.h \
 	$(MAIN_INC)/lbound_ubound.h \
 	$(MAIN_INC)/lcase.h \
 	$(MAIN_INC)/left.h \
@@ -35,15 +34,17 @@ HEADERS=\
 	$(MAIN_INC)/randomize_rnd.h \
 	$(MAIN_INC)/right.h \
 	$(MAIN_INC)/rtrim.h \
-	$(MAIN_INC)/screen_util.h \
 	$(MAIN_INC)/sgn.h \
 	$(MAIN_INC)/sleep.h \
 	$(MAIN_INC)/space.h \
 	$(MAIN_INC)/str.h \
 	$(MAIN_INC)/stringd.h \
-	$(MAIN_INC)/time_util.h \
 	$(MAIN_INC)/timer.h \
 	$(MAIN_INC)/ucase.h \
+	\
+	$(MAIN_SRC)/kbd_util.h \
+	$(MAIN_SRC)/screen_util.h \
+	$(MAIN_SRC)/time_util.h \
 	\
 	$(TEST_INC)/assert.h
 
