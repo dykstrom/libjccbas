@@ -1,7 +1,8 @@
 {
   "files.associations": {
     "command.h": "c",
-    "add.h": "c"
+    "add.h": "c",
+    "kbd_util.h": "c"
   },
   "java.configuration.updateBuildConfiguration": "automatic"
 }
