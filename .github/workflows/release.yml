@@ -157,6 +157,10 @@ jobs:
           cat > RELEASE_NOTES.md << 'EOF'
           ## libjccbas ${{ steps.version.outputs.version }}
 
+          ### What's Changed
+
+          See the [commit history](https://github.com/${{ github.repository }}/commits/${{ steps.version.outputs.tag }}) for detailed changes in this release.
+
           ### Platform Support
 
           This release includes native libraries for the following platforms:
@@ -180,10 +184,6 @@ jobs:
 
           This library is designed to work with the [JCC compiler](https://github.com/dykstrom/jcc).
           See the JCC documentation for integration instructions.
-
-          ### What's Changed
-
-          See the [commit history](https://github.com/${{ github.repository }}/commits/${{ steps.version.outputs.tag }}) for detailed changes in this release.
           EOF
 
           echo "Generated release notes:"
