@@ -1,4 +1,13 @@
-# Windows Clang configuration (x86_64, produces libjccbas.a)
+# Windows Clang configuration (produces libjccbas.a)
+
+# Map architecture to target triple
+ifeq ($(ARCH),aarch64)
+    TARGET_TRIPLE=aarch64-pc-windows-gnu
+else ifeq ($(ARCH),arm64)
+    TARGET_TRIPLE=aarch64-pc-windows-gnu
+else
+    TARGET_TRIPLE=x86_64-pc-windows-gnu
+endif
 
 LIB_NAME_CLANG=libjccbas
 LIB_CLANG=$(BIN_CLANG)/$(LIB_NAME_CLANG).a
@@ -6,12 +15,12 @@ LIB_EXT_CLANG=.a
 EXE_EXT_CLANG=.exe
 
 CC_CLANG=clang
-CC_FLAGS_MAIN_CLANG=-c -g -Wall --target=x86_64-pc-windows-gnu -D_WIN32_WINNT=0x0601 -I$(MAIN_INC)
-CC_FLAGS_TEST_CLANG=-c -g -Wall --target=x86_64-pc-windows-gnu -D_WIN32_WINNT=0x0601 -I$(MAIN_INC) -I$(TEST_INC)
+CC_FLAGS_MAIN_CLANG=-c -g -Wall --target=$(TARGET_TRIPLE) -D_WIN32_WINNT=0x0601 -I$(MAIN_INC)
+CC_FLAGS_TEST_CLANG=-c -g -Wall --target=$(TARGET_TRIPLE) -D_WIN32_WINNT=0x0601 -I$(MAIN_INC) -I$(TEST_INC)
 
 LD_CLANG=clang
 LD_FLAGS_MAKE_CLANG=
-LD_FLAGS_LINK_CLANG=--target=x86_64-pc-windows-gnu -L$(BIN_CLANG) $(LIB_CLANG)
+LD_FLAGS_LINK_CLANG=--target=$(TARGET_TRIPLE) -fuse-ld=lld -rtlib=compiler-rt -unwindlib=libunwind -L$(BIN_CLANG) $(LIB_CLANG)
 
 AR_CLANG=llvm-ar
 AR_FLAGS_CLANG=rcs

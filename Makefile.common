@@ -17,6 +17,7 @@ HEADERS=\
 	$(MAIN_INC)/csrlin.h \
 	$(MAIN_INC)/date_time.h \
 	$(MAIN_INC)/fix.h \
+	$(MAIN_INC)/gosub.h \
 	$(MAIN_INC)/hex.h \
 	$(MAIN_INC)/inkey.h \
 	$(MAIN_INC)/instr.h \
@@ -57,6 +58,7 @@ MAIN_OBJS=\
 	$(BIN)/csrlin.o \
 	$(BIN)/date_time.o \
 	$(BIN)/fix.o \
+	$(BIN)/gosub.o \
 	$(BIN)/hex.o \
 	$(BIN)/inkey.o \
 	$(BIN)/instr.o \
@@ -94,6 +96,7 @@ TEST_NAMES=\
 	test_csrlin \
 	test_date_time \
 	test_fix \
+	test_gosub \
 	test_hex \
 	test_inkey \
 	test_instr \

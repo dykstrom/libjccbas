@@ -108,4 +108,20 @@ void assert_true_Bool(bool actual) {
   }
 }
 
+void assert_equals_int_int(int expected, int actual) {
+  if (expected == actual) {
+    printf("%s\n", OK);
+  } else {
+    printf("%s: expected: %d, but was: %d\n", FAIL, expected, actual);
+  }
+}
+
+void assert_equals_ptr_ptr(void* expected, void* actual) {
+  if (expected == actual) {
+    printf("%s\n", OK);
+  } else {
+    printf("%s: expected: %p, but was: %p\n", FAIL, expected, actual);
+  }
+}
+
 #endif /* ASSERT_H_ */

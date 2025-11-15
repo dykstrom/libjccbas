@@ -1,4 +1,4 @@
-# Windows GCC configuration (x86_64, produces libjccbas.dll)
+# Windows GCC configuration (produces libjccbas.dll)
 
 LIB_NAME_GCC=libjccbas
 LIB_GCC=$(BIN_GCC)/$(LIB_NAME_GCC).dll
