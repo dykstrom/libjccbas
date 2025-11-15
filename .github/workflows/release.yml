@@ -1,0 +1,214 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on version tags like v1.5.1, v2.0.0, etc.
+  workflow_dispatch:  # Allow manual trigger for testing
+
+jobs:
+  # Check that the tag is on the master branch before proceeding
+  verify-branch:
+    name: Verify tag is on master branch
+    runs-on: ubuntu-latest
+    outputs:
+      on_master: ${{ steps.check.outputs.on_master }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for all branches and tags
+
+      - name: Check if tag is on master
+        id: check
+        run: |
+          # Get the commit hash that the tag points to
+          TAG_COMMIT=$(git rev-list -n 1 $GITHUB_REF)
+          echo "Tag commit: $TAG_COMMIT"
+
+          # Check if this commit exists in master branch
+          if git merge-base --is-ancestor $TAG_COMMIT origin/master; then
+            echo "✓ Tag is on master branch"
+            echo "on_master=true" >> $GITHUB_OUTPUT
+          else
+            echo "✗ Tag is NOT on master branch"
+            echo "on_master=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+  build-and-test:
+    name: Build ${{ matrix.platform }}
+    runs-on: ${{ matrix.os }}
+    needs: verify-branch  # Only run if tag is on master
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Windows x86_64
+          - platform: windows-x86_64
+            os: windows-latest
+            arch: x86_64
+            artifact_pattern: "*.zip"
+
+          # macOS ARM64 (Apple Silicon)
+          - platform: macos-arm64
+            os: macos-14
+            arch: arm64
+            artifact_pattern: "*.tar.gz"
+
+          # macOS x86_64 (Intel)
+          - platform: macos-x86_64
+            os: macos-15-intel
+            arch: x86_64
+            artifact_pattern: "*.tar.gz"
+
+          # Linux x86_64
+          - platform: linux-x86_64
+            os: ubuntu-latest
+            arch: x86_64
+            artifact_pattern: "*.tar.gz"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # Windows-specific: Install MinGW-w64 for GCC and Clang
+      - name: Install MinGW-w64 (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install mingw llvm -y
+          echo "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          echo "C:\Program Files\LLVM\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      # Linux-specific: Install Clang
+      - name: Install Clang (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang llvm
+
+      # macOS already has Clang installed via Xcode Command Line Tools
+
+      - name: Verify toolchains
+        run: |
+          echo "=== Checking toolchains ==="
+          make --version || true
+          gcc --version || true
+          clang --version || true
+
+      - name: Build library
+        run: make clean && make
+
+      - name: Run tests
+        run: ./run_all_tests.sh
+        shell: bash
+
+      - name: Package with Maven
+        run: mvn clean package
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: libjccbas-${{ matrix.platform }}
+          path: target/*${{ matrix.artifact_pattern }}
+          if-no-files-found: error
+          retention-days: 90  # Keep release artifacts longer than build artifacts
+
+  create-release:
+    name: Create GitHub Release
+    needs: [verify-branch, build-and-test]  # Requires both branch check and successful builds
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required for creating releases
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          # Remove 'v' prefix from tag (e.g., v1.5.1 -> 1.5.1)
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Display artifact structure
+        run: |
+          echo "=== Downloaded artifacts ==="
+          ls -lR artifacts/
+
+      - name: Create release notes
+        id: release_notes
+        run: |
+          cat > RELEASE_NOTES.md << 'EOF'
+          ## libjccbas ${{ steps.version.outputs.version }}
+
+          ### Platform Support
+
+          This release includes native libraries for the following platforms:
+
+          - **Windows x86_64**: `libjccbas.dll` and `libjccbas.a` (GCC and Clang)
+          - **macOS ARM64**: `libjccbas.a` (Apple Silicon)
+          - **macOS x86_64**: `libjccbas.a` (Intel)
+          - **Linux x86_64**: `libjccbas.a`
+
+          ### Installation
+
+          1. Download the appropriate archive for your platform
+          2. Extract the archive
+          3. The package contains:
+             - `lib/` - Native library files
+             - `inc/` - C header files
+             - `README.md` - Documentation
+             - `LICENSE` - License information
+
+          ### Usage
+
+          This library is designed to work with the [JCC compiler](https://github.com/dykstrom/jcc).
+          See the JCC documentation for integration instructions.
+
+          ### What's Changed
+
+          See the [commit history](https://github.com/${{ github.repository }}/commits/${{ steps.version.outputs.tag }}) for detailed changes in this release.
+          EOF
+
+          echo "Generated release notes:"
+          cat RELEASE_NOTES.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Release ${{ steps.version.outputs.version }}
+          body_path: RELEASE_NOTES.md
+          draft: false
+          prerelease: false
+          files: |
+            artifacts/libjccbas-windows-x86_64/*.zip
+            artifacts/libjccbas-macos-arm64/*.tar.gz
+            artifacts/libjccbas-macos-x86_64/*.tar.gz
+            artifacts/libjccbas-linux-x86_64/*.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release summary
+        run: |
+          echo "### Release ${{ steps.version.outputs.version }} created successfully! :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Tag:** ${{ steps.version.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Platforms:** Windows x86_64, macOS ARM64, macOS x86_64, Linux x86_64" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "View release at: https://github.com/${{ github.repository }}/releases/tag/${{ steps.version.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
