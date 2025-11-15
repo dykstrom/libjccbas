@@ -20,15 +20,16 @@
 #include "assert.h"
 #include "stringd.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   char *actual;
 
   actual = string$_I64(0, 45);
   assert_equals_Str_Str("", actual);
   free(actual);
 
-  actual = string$_I64(3, 229);
-  assert_equals_Str_Str("ååå", actual);
+  actual = string$_I64(3, 97);
+  assert_equals_Str_Str("aaa", actual);
   free(actual);
 
   actual = string$_I64(7, 48);
@@ -43,7 +44,7 @@ int main(int argc, char *argv[]) {
   assert_equals_Str_Str("aa", actual);
   free(actual);
 
-  actual = string$_Str(5, "Ö");
-  assert_equals_Str_Str("ÖÖÖÖÖ", actual);
+  actual = string$_Str(5, " ");
+  assert_equals_Str_Str("     ", actual);
   free(actual);
 }

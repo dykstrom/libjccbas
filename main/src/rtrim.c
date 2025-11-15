@@ -21,7 +21,7 @@
 
 #include "rtrim.h"
 
-char* rtrim(const char* s) {
+char* rtrim$(const char* s) {
   int index = strlen(s) - 1;
 
   // Walk backwards from the end while we only see whitespace

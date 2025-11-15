@@ -1,0 +1,20 @@
+# Windows platform configuration (x86_64)
+# Builds both:
+#   - libjccbas.dll with GCC
+#   - libjccbas.a with Clang
+
+# Separate bin directories for each toolchain
+BIN_GCC=$(BIN)/gcc
+BIN_CLANG=$(BIN)/clang
+
+.PHONY: all clean all-gcc all-clang clean-gcc clean-clang
+
+all: all-gcc all-clang
+
+clean: clean-gcc clean-clang
+
+# Include GCC-specific configuration
+include Makefile.windows.gcc
+
+# Include Clang-specific configuration
+include Makefile.windows.clang

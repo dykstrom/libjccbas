@@ -1,0 +1,57 @@
+# Windows Clang configuration (produces libjccbas.a)
+
+# Map architecture to target triple and runtime flags
+ifeq ($(ARCH),aarch64)
+    TARGET_TRIPLE=aarch64-pc-windows-gnu
+    RUNTIME_FLAGS=-fuse-ld=lld -rtlib=compiler-rt -unwindlib=libunwind
+else ifeq ($(ARCH),arm64)
+    TARGET_TRIPLE=aarch64-pc-windows-gnu
+    RUNTIME_FLAGS=-fuse-ld=lld -rtlib=compiler-rt -unwindlib=libunwind
+else
+    TARGET_TRIPLE=x86_64-pc-windows-gnu
+    RUNTIME_FLAGS=
+endif
+
+LIB_NAME_CLANG=libjccbas
+LIB_CLANG=$(BIN_CLANG)/$(LIB_NAME_CLANG).a
+LIB_EXT_CLANG=.a
+EXE_EXT_CLANG=.exe
+
+CC_CLANG=clang
+CC_FLAGS_MAIN_CLANG=-c -g -Wall --target=$(TARGET_TRIPLE) -D_WIN32_WINNT=0x0601 -I$(MAIN_INC)
+CC_FLAGS_TEST_CLANG=-c -g -Wall --target=$(TARGET_TRIPLE) -D_WIN32_WINNT=0x0601 -I$(MAIN_INC) -I$(TEST_INC)
+
+LD_CLANG=clang
+LD_FLAGS_MAKE_CLANG=
+LD_FLAGS_LINK_CLANG=--target=$(TARGET_TRIPLE) $(RUNTIME_FLAGS) -L$(BIN_CLANG) $(LIB_CLANG)
+
+AR_CLANG=llvm-ar
+AR_FLAGS_CLANG=rcs
+
+# Clang-specific object files
+MAIN_OBJS_CLANG=$(patsubst $(BIN)/%,$(BIN_CLANG)/%,$(MAIN_OBJS))
+TEST_EXES_CLANG=$(patsubst %,$(BIN_CLANG)/%$(EXE_EXT_CLANG),$(TEST_NAMES))
+
+.PHONY: all-clang clean-clang
+
+.PRECIOUS: $(BIN_CLANG)/%.o
+
+all-clang: $(BIN_CLANG) $(LIB_CLANG) $(TEST_EXES_CLANG)
+
+clean-clang:
+	-rm -rf $(BIN_CLANG)
+
+$(BIN_CLANG):
+	-mkdir -p $(BIN_CLANG)
+
+$(BIN_CLANG)/%.o: $(MAIN_SRC)/%.c $(HEADERS)
+	$(CC_CLANG) -o $@ $(CC_FLAGS_MAIN_CLANG) $<
+
+$(LIB_CLANG): $(MAIN_OBJS_CLANG)
+	$(AR_CLANG) $(AR_FLAGS_CLANG) $@ $^
+
+$(BIN_CLANG)/%.o: $(TEST_SRC)/%.c $(HEADERS) $(LIB_CLANG)
+	$(CC_CLANG) -o $@ $(CC_FLAGS_TEST_CLANG) $<
+
+$(BIN_CLANG)/%$(EXE_EXT_CLANG): $(BIN_CLANG)/%.o
+	$(LD_CLANG) -o $@ $< $(LD_FLAGS_LINK_CLANG)

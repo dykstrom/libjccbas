@@ -15,7 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef _WIN32
 #include <conio.h>
+#else
+#include "kbd_util.h"
+#endif
+
 #include <stdlib.h>
 
 #include "inkey.h"

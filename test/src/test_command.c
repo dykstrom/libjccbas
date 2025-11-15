@@ -21,13 +21,18 @@
 #include "assert.h"
 #include "command.h"
 
-int main(int argc, char *argv[]) {
-  char* actual;
+int main(int argc, char *argv[])
+{
+  char *actual;
+
+#ifndef _WIN32
+  // Initialize command line on Unix-like systems
+  init_command_line(argc, argv);
+#endif
 
   actual = command$();
-  printf("%s\n", actual);
 
   assert_true_Bool(strstr(actual, "test_command") != 0);
-  
+
   free(actual);
 }

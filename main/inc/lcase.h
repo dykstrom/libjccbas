@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Johan Dykstrom
+ * Copyright (C) 2025 Johan Dykstrom
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,10 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "jccbasic_version.h"
+#ifndef LCASE$_H_
+#define LCASE$_H_
 
-static int64_t VERSION = 1005001;
+// Converts a string to lowercase. This function allocates memory.
+// It is the caller's responsibility to free this memory.
+char *lcase$(const char *s);
 
-int64_t jccbasic_version() {
-  return VERSION;
-}
+#endif /* LCASE$_H_ */

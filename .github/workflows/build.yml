@@ -1,0 +1,97 @@
+name: build
+
+on:
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build ${{ matrix.platform }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Windows x86_64
+          - platform: windows-x86_64
+            os: windows-latest
+            arch: x86_64
+            make_target: all
+            artifact_pattern: "*.zip"
+
+          # macOS ARM64 (Apple Silicon)
+          - platform: macos-arm64
+            os: macos-14
+            arch: arm64
+            make_target: all
+            artifact_pattern: "*.tar.gz"
+
+          # macOS x86_64 (Intel)
+          - platform: macos-x86_64
+            os: macos-15-intel
+            arch: x86_64
+            make_target: all
+            artifact_pattern: "*.tar.gz"
+
+          # Linux x86_64
+          - platform: linux-x86_64
+            os: ubuntu-latest
+            arch: x86_64
+            make_target: all
+            artifact_pattern: "*.tar.gz"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # Windows-specific: Install MinGW-w64 for GCC and Clang
+      - name: Install MinGW-w64 (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install mingw llvm -y
+          echo "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          echo "C:\Program Files\LLVM\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      # Linux-specific: Install Clang
+      - name: Install Clang (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang llvm
+
+      # macOS already has Clang installed via Xcode Command Line Tools
+
+      - name: Verify toolchains
+        run: |
+          echo "=== Checking toolchains ==="
+          make --version || true
+          gcc --version || true
+          clang --version || true
+
+      - name: Build library
+        run: make clean && make
+
+      - name: Run tests
+        run: ./run_all_tests.sh
+        shell: bash
+
+      - name: Package with Maven
+        run: mvn clean package
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: libjccbas-${{ matrix.platform }}
+          path: target/*${{ matrix.artifact_pattern }}
+          if-no-files-found: error
+          retention-days: 30

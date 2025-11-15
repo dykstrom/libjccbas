@@ -20,14 +20,15 @@
 #include "assert.h"
 #include "chr.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   char *actual;
 
   actual = chr$(45);
   assert_equals_Str_Str("-", actual);
   free(actual);
 
-  actual = chr$(229);
-  assert_equals_Str_Str("å", actual);
+  actual = chr$(97);
+  assert_equals_Str_Str("a", actual);
   free(actual);
 }

@@ -21,7 +21,7 @@
 
 #include "ltrim.h"
 
-char* ltrim(const char* s) {
+char* ltrim$(const char* s) {
   while ((s[0] != 0) && isspace(s[0])) {
     s++;
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Johan Dykstrom
+ * Copyright (C) 2025 Johan Dykstrom
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef JCCBASIC_VERSION_H_
-#define JCCBASIC_VERSION_H_
+#include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
 
-#include <stdint.h>
+#include "lcase.h"
 
-// Returns the current version of the JCC Basic standard library as a 64-bit
-// integer. The last three digits of this integer represent the patch level.
-// The three digits to the left of the patch level represent the minor version,
-// and all the digits to the left of the minor version represent the major
-// version. As an example, the version 1.12.7 would be returned as 1012007.
-int64_t jccbasic_version();
+char* lcase$(const char* s) {
+  size_t len = strlen(s);
+  char* result = malloc(len + 1);
 
-#endif /* JCCBASIC_VERSION_H_ */
+  for (size_t i = 0; i < len; i++) {
+    result[i] = tolower((unsigned char)s[i]);
+  }
+  result[len] = '\0';
+
+  return result;
+}

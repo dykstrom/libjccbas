@@ -1,0 +1,45 @@
+# Windows GCC configuration (produces libjccbas.dll)
+
+LIB_NAME_GCC=libjccbas
+LIB_GCC=$(BIN_GCC)/$(LIB_NAME_GCC).dll
+LIB_EXT_GCC=.dll
+EXE_EXT_GCC=.exe
+
+CC_GCC=gcc
+CC_FLAGS_MAIN_GCC=-c -g -Wall -I$(MAIN_INC)
+CC_FLAGS_TEST_GCC=-c -g -Wall -I$(MAIN_INC) -I$(TEST_INC)
+
+LD_GCC=gcc
+LD_FLAGS_MAKE_GCC=-shared
+LD_FLAGS_LINK_GCC=-L$(BIN_GCC) -l$(LIB_NAME_GCC)
+
+AR_GCC=ar
+AR_FLAGS_GCC=rcs
+
+# GCC-specific object files
+MAIN_OBJS_GCC=$(patsubst $(BIN)/%,$(BIN_GCC)/%,$(MAIN_OBJS))
+TEST_EXES_GCC=$(patsubst %,$(BIN_GCC)/%$(EXE_EXT_GCC),$(TEST_NAMES))
+
+.PHONY: all-gcc clean-gcc
+
+.PRECIOUS: $(BIN_GCC)/%.o
+
+all-gcc: $(BIN_GCC) $(LIB_GCC) $(TEST_EXES_GCC)
+
+clean-gcc:
+	-rm -rf $(BIN_GCC)
+
+$(BIN_GCC):
+	-mkdir -p $(BIN_GCC)
+
+$(BIN_GCC)/%.o: $(MAIN_SRC)/%.c $(HEADERS)
+	$(CC_GCC) -o $@ $(CC_FLAGS_MAIN_GCC) $<
+
+$(LIB_GCC): $(MAIN_OBJS_GCC)
+	$(LD_GCC) -o $@ $(LD_FLAGS_MAKE_GCC) $^
+
+$(BIN_GCC)/%.o: $(TEST_SRC)/%.c $(HEADERS) $(LIB_GCC)
+	$(CC_GCC) -o $@ $(CC_FLAGS_TEST_GCC) $<
+
+$(BIN_GCC)/%$(EXE_EXT_GCC): $(BIN_GCC)/%.o
+	$(LD_GCC) -o $@ $< $(LD_FLAGS_LINK_GCC)

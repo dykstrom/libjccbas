@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Johan Dykstrom
+ * Copyright (C) 2025 Johan Dykstrom
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,9 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "assert.h"
-#include "jccbasic_version.h"
+#ifndef TIME_UTIL_H_
+#define TIME_UTIL_H_
 
-int main(int argc, char *argv[]) {
-  assert_true_Bool(jccbasic_version() >= 1000000);
-}
+#include <time.h>
+
+#ifndef _WIN32
+// Unix-like time utility functions
+// These provide Windows-like time functionality on Unix systems
+
+// Get current system time and return milliseconds
+// Fills the provided tm struct with local time and returns the millisecond component
+unsigned _getsystime(struct tm *t);
+
+#endif
+
+#endif /* TIME_UTIL_H_ */
