@@ -1,12 +1,15 @@
 # Windows Clang configuration (produces libjccbas.a)
 
-# Map architecture to target triple
+# Map architecture to target triple and runtime flags
 ifeq ($(ARCH),aarch64)
     TARGET_TRIPLE=aarch64-pc-windows-gnu
+    RUNTIME_FLAGS=-fuse-ld=lld -rtlib=compiler-rt -unwindlib=libunwind
 else ifeq ($(ARCH),arm64)
     TARGET_TRIPLE=aarch64-pc-windows-gnu
+    RUNTIME_FLAGS=-fuse-ld=lld -rtlib=compiler-rt -unwindlib=libunwind
 else
     TARGET_TRIPLE=x86_64-pc-windows-gnu
+    RUNTIME_FLAGS=
 endif
 
 LIB_NAME_CLANG=libjccbas
@@ -20,7 +23,7 @@ CC_FLAGS_TEST_CLANG=-c -g -Wall --target=$(TARGET_TRIPLE) -D_WIN32_WINNT=0x0601 
 
 LD_CLANG=clang
 LD_FLAGS_MAKE_CLANG=
-LD_FLAGS_LINK_CLANG=--target=$(TARGET_TRIPLE) -fuse-ld=lld -rtlib=compiler-rt -unwindlib=libunwind -L$(BIN_CLANG) $(LIB_CLANG)
+LD_FLAGS_LINK_CLANG=--target=$(TARGET_TRIPLE) $(RUNTIME_FLAGS) -L$(BIN_CLANG) $(LIB_CLANG)
 
 AR_CLANG=llvm-ar
 AR_FLAGS_CLANG=rcs
