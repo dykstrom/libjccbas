@@ -11,8 +11,8 @@
   </properties>
 
   <scm>
-    <developerConnection>scm:git:https://github.com/dykstrom/libjccbas.git</developerConnection>
-    <tag>v2.0.0</tag>
+    <developerConnection>scm:git:git@github.com:dykstrom/libjccbas.git</developerConnection>
+    <tag>HEAD</tag>
   </scm>
 
   <build>
