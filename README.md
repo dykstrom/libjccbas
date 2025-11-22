@@ -12,7 +12,10 @@ The JCC BASIC standard library - a part of [JCC](https://github.com/dykstrom/jcc
 
 ## Using
 
-The JCC BASIC standard library is designed to be used with the [JCC compiler](https://github.com/dykstrom/jcc). It is distributed as `libjccbas.dll` and `libjccbas.a` on Windows, or `libjccbas.a` on macOS/Linux.
+The JCC BASIC standard library is designed to be used with the [JCC compiler](https://github.com/dykstrom/jcc). It is distributed as:
+
+- **Windows**: `libjccbas.dll` (linked with msvcrt.dll for FASM) and `libjccbas.a` (linked with UCRT for LLVM/Clang)
+- **macOS/Linux**: `libjccbas.a` (static library)
 
 ## Building
 
@@ -35,10 +38,12 @@ To build the JCC BASIC standard library locally, you need platform-specific tool
 
 **Windows:**
 
-- 64-bit MinGW-w64 (GCC)
-- Clang/LLVM (optional, for static library)
+- 64-bit MinGW-w64 (GCC) - builds `libjccbas.dll` with msvcrt.dll
+- Clang/LLVM - builds `libjccbas.a` with UCRT
 - GNU Make
 - Basic Unix tools (mkdir, rm)
+
+**Note on Windows C Runtime:** The DLL is intentionally linked with the legacy msvcrt.dll (Microsoft C Runtime) instead of UCRT (Universal CRT) to ensure compatibility with FASM-generated executables. The static library uses UCRT for compatibility with modern LLVM/Clang toolchains.
 
 **macOS:**
 

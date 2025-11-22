@@ -81,12 +81,26 @@ jobs:
           java-version: '17'
 
       # Windows-specific: Install MinGW-w64 for GCC and Clang
-      - name: Install MinGW-w64 (Windows)
+      # GCC builds libjccbas.dll with msvcrt.dll (legacy CRT) for FASM compatibility
+      # Clang builds libjccbas.a with UCRT (Universal CRT) for modern toolchain compatibility
+      - name: Install MSYS2 with MinGW (Windows)
         if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-clang
+            mingw-w64-x86_64-llvm
+            make
+
+      - name: Add MinGW to PATH (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
         run: |
-          choco install mingw llvm -y
-          echo "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          echo "C:\Program Files\LLVM\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          echo "C:/msys64/mingw64/bin" >> $GITHUB_PATH
+          echo "C:/msys64/usr/bin" >> $GITHUB_PATH
 
       # Linux-specific: Install Clang
       - name: Install Clang (Linux)
@@ -97,19 +111,41 @@ jobs:
 
       # macOS already has Clang installed via Xcode Command Line Tools
 
-      - name: Verify toolchains
+      - name: Verify toolchains (Windows)
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
         run: |
           echo "=== Checking toolchains ==="
           make --version || true
           gcc --version || true
           clang --version || true
 
-      - name: Build library
+      - name: Verify toolchains (Non-Windows)
+        if: runner.os != 'Windows'
+        run: |
+          echo "=== Checking toolchains ==="
+          make --version || true
+          gcc --version || true
+          clang --version || true
+
+      - name: Build library (Windows)
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
         run: make clean && make
 
-      - name: Run tests
+      - name: Build library (Non-Windows)
+        if: runner.os != 'Windows'
+        run: make clean && make
+
+      - name: Run tests (Windows)
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
         run: ./run_all_tests.sh
+
+      - name: Run tests (Non-Windows)
+        if: runner.os != 'Windows'
         shell: bash
+        run: ./run_all_tests.sh
 
       - name: Package with Maven
         run: mvn clean package
@@ -157,11 +193,17 @@ jobs:
           cat > RELEASE_NOTES.md << 'EOF'
           ## libjccbas ${{ steps.version.outputs.version }}
 
+          ### What's Changed
+
+          See the [commit history](https://github.com/${{ github.repository }}/commits/${{ steps.version.outputs.tag }}) for detailed changes in this release.
+
           ### Platform Support
 
           This release includes native libraries for the following platforms:
 
-          - **Windows x86_64**: `libjccbas.dll` and `libjccbas.a` (GCC and Clang)
+          - **Windows x86_64**:
+            - `libjccbas.dll` (GCC, linked with msvcrt.dll for FASM compatibility)
+            - `libjccbas.a` (Clang, linked with UCRT for modern toolchains)
           - **macOS ARM64**: `libjccbas.a` (Apple Silicon)
           - **macOS x86_64**: `libjccbas.a` (Intel)
           - **Linux x86_64**: `libjccbas.a`
@@ -180,10 +222,6 @@ jobs:
 
           This library is designed to work with the [JCC compiler](https://github.com/dykstrom/jcc).
           See the JCC documentation for integration instructions.
-
-          ### What's Changed
-
-          See the [commit history](https://github.com/${{ github.repository }}/commits/${{ steps.version.outputs.tag }}) for detailed changes in this release.
           EOF
 
           echo "Generated release notes:"

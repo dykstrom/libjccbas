@@ -1,4 +1,5 @@
 # Windows GCC configuration (produces libjccbas.dll)
+# Links with msvcrt.dll (legacy CRT) for compatibility with FASM-generated code
 
 LIB_NAME_GCC=libjccbas
 LIB_GCC=$(BIN_GCC)/$(LIB_NAME_GCC).dll
@@ -10,8 +11,12 @@ CC_FLAGS_MAIN_GCC=-c -g -Wall -I$(MAIN_INC)
 CC_FLAGS_TEST_GCC=-c -g -Wall -I$(MAIN_INC) -I$(TEST_INC)
 
 LD_GCC=gcc
-LD_FLAGS_MAKE_GCC=-shared
-LD_FLAGS_LINK_GCC=-L$(BIN_GCC) -l$(LIB_NAME_GCC)
+# Force linking with msvcrt.dll instead of UCRT for FASM compatibility
+# MSYS2 MINGW64 environment defaults to msvcrt, so we just need -static-libgcc
+# -shared: Create shared library (DLL)
+# -static-libgcc: Link libgcc statically to avoid extra DLL dependencies
+LD_FLAGS_MAKE_GCC=-shared -static-libgcc
+LD_FLAGS_LINK_GCC=-L$(BIN_GCC) -l$(LIB_NAME_GCC) -static-libgcc
 
 AR_GCC=ar
 AR_FLAGS_GCC=rcs
