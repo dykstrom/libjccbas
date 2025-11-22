@@ -12,14 +12,11 @@ CC_FLAGS_TEST_GCC=-c -g -Wall -I$(MAIN_INC) -I$(TEST_INC)
 
 LD_GCC=gcc
 # Force linking with msvcrt.dll instead of UCRT for FASM compatibility
+# MSYS2 MINGW64 environment defaults to msvcrt, so we just need -static-libgcc
 # -shared: Create shared library (DLL)
-# -static-libgcc: Link libgcc statically to avoid DLL dependencies
-# -nodefaultlibs: Don't link default libraries (prevents UCRT)
-# -lmingw32, -lgcc, -lmoldname, -lmingwex: MinGW runtime libraries
-# -lmsvcrt: Explicitly link to msvcrt.dll (legacy CRT)
-# -ladvapi32, -lshell32, -luser32, -lkernel32: Windows system libraries
-LD_FLAGS_MAKE_GCC=-shared -static-libgcc -nodefaultlibs -lmingw32 -lgcc -lmoldname -lmingwex -lmsvcrt -ladvapi32 -lshell32 -luser32 -lkernel32
-LD_FLAGS_LINK_GCC=-L$(BIN_GCC) -l$(LIB_NAME_GCC) -static-libgcc -nodefaultlibs -lmingw32 -lgcc -lmoldname -lmingwex -lmsvcrt -ladvapi32 -lshell32 -luser32 -lkernel32
+# -static-libgcc: Link libgcc statically to avoid extra DLL dependencies
+LD_FLAGS_MAKE_GCC=-shared -static-libgcc
+LD_FLAGS_LINK_GCC=-L$(BIN_GCC) -l$(LIB_NAME_GCC) -static-libgcc
 
 AR_GCC=ar
 AR_FLAGS_GCC=rcs
