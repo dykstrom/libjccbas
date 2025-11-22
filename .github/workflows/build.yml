@@ -55,6 +55,8 @@ jobs:
           java-version: '17'
 
       # Windows-specific: Install MinGW-w64 for GCC and Clang
+      # GCC builds libjccbas.dll with msvcrt.dll (legacy CRT) for FASM compatibility
+      # Clang builds libjccbas.a with UCRT (Universal CRT) for modern toolchain compatibility
       - name: Install MinGW-w64 (Windows)
         if: runner.os == 'Windows'
         run: |

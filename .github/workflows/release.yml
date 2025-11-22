@@ -81,6 +81,8 @@ jobs:
           java-version: '17'
 
       # Windows-specific: Install MinGW-w64 for GCC and Clang
+      # GCC builds libjccbas.dll with msvcrt.dll (legacy CRT) for FASM compatibility
+      # Clang builds libjccbas.a with UCRT (Universal CRT) for modern toolchain compatibility
       - name: Install MinGW-w64 (Windows)
         if: runner.os == 'Windows'
         run: |
@@ -165,7 +167,9 @@ jobs:
 
           This release includes native libraries for the following platforms:
 
-          - **Windows x86_64**: `libjccbas.dll` and `libjccbas.a` (GCC and Clang)
+          - **Windows x86_64**:
+            - `libjccbas.dll` (GCC, linked with msvcrt.dll for FASM compatibility)
+            - `libjccbas.a` (Clang, linked with UCRT for modern toolchains)
           - **macOS ARM64**: `libjccbas.a` (Apple Silicon)
           - **macOS x86_64**: `libjccbas.a` (Intel)
           - **Linux x86_64**: `libjccbas.a`

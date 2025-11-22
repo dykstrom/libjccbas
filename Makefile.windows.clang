@@ -1,4 +1,6 @@
 # Windows Clang configuration (produces libjccbas.a)
+# Links with UCRT (Universal CRT) which is the modern Windows C runtime
+# This is appropriate for static libraries used with clang/LLVM toolchain
 
 # Map architecture to target triple and runtime flags
 ifeq ($(ARCH),aarch64)
