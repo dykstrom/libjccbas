@@ -1,197 +1,269 @@
 # Release Process
 
-This document describes the manual release process for libjccbas using GitHub Actions.
+This document describes how to create releases for libjccbas using the Maven Release Plugin, which automates version management, tagging, and triggers the GitHub Actions release workflow.
 
-**Alternative**: For automated releases, see `MAVEN_RELEASE.md` which describes using the Maven Release Plugin to automate version management and tag creation.
+## Quick Start
+
+```bash
+# Ensure clean state on master
+git checkout master
+git pull origin master
+git status  # Should be clean
+
+# Create release (interactive)
+mvn release:prepare
+
+# Monitor GitHub Actions for build/release
+```
 
 ## Overview
 
-The release workflow is automated through GitHub Actions and triggers when a version tag is pushed to the repository. The workflow:
+The release process consists of two parts:
 
-1. Builds the library on all supported platforms (Windows x86_64, macOS ARM64, macOS x86_64, Linux x86_64)
-2. Runs the complete test suite on each platform
-3. Packages the libraries using Maven
-4. Creates a GitHub Release with all platform-specific artifacts
+1. **Maven Release Plugin**: Automates version updates, Git commits, and tag creation
+2. **GitHub Actions**: Automatically builds on all platforms (Windows/macOS/Linux x86_64, macOS ARM64), runs tests, and creates GitHub Releases with artifacts
+
+When you run `mvn release:prepare`, it automatically:
+- Updates `pom.xml` to release version (removes `-SNAPSHOT`)
+- Commits with message: `[maven-release-plugin] prepare release vX.Y.Z`
+- Creates and pushes annotated tag `vX.Y.Z`
+- Updates `pom.xml` to next development version (adds `-SNAPSHOT`)
+- Commits with message: `[maven-release-plugin] prepare for next development iteration`
+
+The pushed tag triggers GitHub Actions to build, test, and release on all platforms.
 
 ## Prerequisites
 
-Before creating a release, ensure:
+Before releasing, ensure:
 
-1. All changes are committed and pushed to the `master` branch
-2. The version number in `pom.xml` matches the intended release version
-3. All tests pass locally: `./run_all_tests.sh`
-4. The build succeeds on all platforms (verify in GitHub Actions)
+1. **On master branch**: Releases must originate from `master`
+   ```bash
+   git checkout master
+   git pull origin master
+   ```
+
+2. **Clean working directory**: No uncommitted changes
+   ```bash
+   git status  # Should show "nothing to commit, working tree clean"
+   ```
+
+3. **Git authentication**: Can push to repository
+   ```bash
+   git remote -v  # Verify remote URL
+   ```
+
+4. **Tests pass locally**: Run the test suite
+   ```bash
+   ./run_all_tests.sh
+   ```
 
 ## Creating a Release
 
-**IMPORTANT:** Releases can only be created from the `master` branch. The workflow will automatically verify that any version tag points to a commit on the master branch before proceeding with the build.
+### Interactive Mode (Recommended)
 
-### Step 1: Update Version Number
-
-Edit `pom.xml` and update the version:
-
-```xml
-<version>1.5.1</version>  <!-- Remove -SNAPSHOT for release -->
-```
-
-Commit the version change:
+Run the release plugin:
 
 ```bash
-git add pom.xml
-git commit -m "Bump version to 1.5.1 for release"
-git push origin master
+mvn release:prepare
 ```
 
-### Step 2: Create and Push a Version Tag
+You'll be prompted for:
 
-Create an annotated tag with a 'v' prefix:
+1. **Release version** (e.g., `2.0.1`)
+   - Default removes `-SNAPSHOT` from current version
+
+2. **Tag name** (e.g., `v2.0.1`)
+   - Automatically prefixed with `v` via configured `tagNameFormat`
+   - Default is `v` + release version
+
+3. **Next development version** (e.g., `2.0.2-SNAPSHOT`)
+   - Default increments patch version and adds `-SNAPSHOT`
+
+Press Enter to accept defaults or type custom values.
+
+### Non-Interactive Mode
+
+For automation or when you know the versions:
 
 ```bash
-git tag -a v1.5.1 -m "Release version 1.5.1"
-git push origin v1.5.1
+mvn release:prepare -B \
+  -DreleaseVersion=2.0.1 \
+  -Dtag=v2.0.1 \
+  -DdevelopmentVersion=2.0.2-SNAPSHOT
 ```
 
-The tag format must be `v<major>.<minor>.<patch>` (e.g., `v1.5.1`, `v2.0.0`).
+The `-B` flag runs in batch mode without prompts.
 
-### Step 3: Monitor the Release Workflow
+### Monitoring the Build
 
 1. Navigate to the **Actions** tab in GitHub
-2. Find the **release** workflow run triggered by your tag
-3. Monitor the build progress for all platforms
-4. Each platform build includes:
-   - Toolchain installation and verification
-   - Library compilation (Make build)
-   - Test execution (`run_all_tests.sh`)
-   - Maven packaging
+2. Find the **release** workflow triggered by your tag
+3. Monitor build progress for all platforms
+4. Once complete, check the **Releases** tab for platform-specific artifacts:
+   - `libjccbas-X.Y.Z-windows-x86_64.zip`
+   - `libjccbas-X.Y.Z-macos-arm64.tar.gz`
+   - `libjccbas-X.Y.Z-macos-x86_64.tar.gz`
+   - `libjccbas-X.Y.Z-linux-x86_64.tar.gz`
 
-### Step 4: Verify the Release
+## Testing Before Release
 
-Once the workflow completes successfully:
+Test the release process without making changes:
 
-1. Navigate to the **Releases** tab in GitHub
-2. Find the newly created release (e.g., "Release 1.5.1")
-3. Verify all platform artifacts are attached:
-   - `libjccbas-1.5.1-windows-x86_64.zip`
-   - `libjccbas-1.5.1-macos-arm64.tar.gz`
-   - `libjccbas-1.5.1-macos-x86_64.tar.gz`
-   - `libjccbas-1.5.1-linux-x86_64.tar.gz`
+```bash
+# Dry run
+mvn release:prepare -DdryRun=true
 
-### Step 5: Update to Next Development Version
-
-After the release, update `pom.xml` to the next development version:
-
-```xml
-<version>1.5.2-SNAPSHOT</version>  <!-- Next development version -->
+# Review output, then clean up
+mvn release:clean
 ```
 
-Commit and push:
+## Troubleshooting
+
+### Working Directory Not Clean
+
+```bash
+git status
+git stash  # If you have local changes to preserve
+```
+
+### Release Fails After Tag Push
+
+If the GitHub Actions workflow fails:
+
+1. Check workflow logs for errors
+2. Fix the issue in code
+3. Delete the tag locally and remotely:
+   ```bash
+   git tag -d vX.Y.Z
+   git push origin :refs/tags/vX.Y.Z
+   ```
+4. Reset version changes:
+   ```bash
+   git reset --hard origin/master
+   ```
+5. Re-run `mvn release:prepare`
+
+### Tag Not on Master Branch
+
+If you accidentally ran the release from a non-master branch:
+
+1. Delete the tag:
+   ```bash
+   git push origin :refs/tags/vX.Y.Z
+   ```
+
+2. Switch to master:
+   ```bash
+   git checkout master
+   git pull origin master
+   ```
+
+3. Re-run release:
+   ```bash
+   mvn release:rollback  # If needed
+   mvn release:clean
+   mvn release:prepare
+   ```
+
+### Rolling Back Before Push
+
+If `release:prepare` fails before pushing:
+
+```bash
+mvn release:rollback
+```
+
+This removes the tag and reverts version changes. Only works if changes haven't been pushed yet.
+
+### Cleaning Up
+
+After successful or failed release:
+
+```bash
+mvn release:clean
+```
+
+Removes temporary files: `release.properties`, `pom.xml.releaseBackup`, etc.
+
+## Manual Release Process
+
+For special cases (hotfixes, custom workflows), you can create releases manually:
+
+### Step 1: Update Version
+
+Edit `pom.xml`:
+
+```xml
+<version>2.0.1</version>  <!-- Remove -SNAPSHOT -->
+```
+
+Commit:
 
 ```bash
 git add pom.xml
-git commit -m "Bump version to 1.5.2-SNAPSHOT for development"
+git commit -m "Bump version to 2.0.1 for release"
 git push origin master
 ```
+
+### Step 2: Create and Push Tag
+
+```bash
+git tag -a v2.0.1 -m "Release version 2.0.1"
+git push origin v2.0.1
+```
+
+Tag format must be `v<major>.<minor>.<patch>`.
+
+### Step 3: Update to Development Version
+
+Edit `pom.xml`:
+
+```xml
+<version>2.0.2-SNAPSHOT</version>
+```
+
+Commit:
+
+```bash
+git add pom.xml
+git commit -m "Bump version to 2.0.2-SNAPSHOT for development"
+git push origin master
+```
+
+## Version Numbering
+
+This project follows [Semantic Versioning](https://semver.org/):
+
+- **MAJOR**: Incompatible API changes
+- **MINOR**: New functionality, backwards compatible
+- **PATCH**: Backwards compatible bug fixes
+
+Development versions use `-SNAPSHOT` suffix (e.g., `2.0.2-SNAPSHOT`).
 
 ## Release Artifacts
 
 Each platform-specific archive contains:
 
 - `lib/` - Native library files
-  - Windows: `libjccbas.dll` (GCC) and `libjccbas.a` (Clang)
+  - Windows: `libjccbas.dll` (GCC), `libjccbas.a` (Clang)
   - macOS/Linux: `libjccbas.a` (Clang)
 - `inc/` - C header files for all BASIC functions
 - `README.md` - Project documentation
 - `LICENSE` - License information
 
-## Troubleshooting
-
-### Tag Not on Master Branch
-
-If you accidentally push a tag from a non-master branch (e.g., `dev`), the workflow will fail at the verification step with:
-
-```
-✗ Tag is NOT on master branch
-```
-
-To fix this:
-
-1. Delete the tag locally and remotely:
-   ```bash
-   git tag -d v1.5.1
-   git push origin :refs/tags/v1.5.1
-   ```
-
-2. Switch to master and ensure it's up to date:
-   ```bash
-   git checkout master
-   git pull origin master
-   ```
-
-3. Create the tag on master:
-   ```bash
-   git tag -a v1.5.1 -m "Release version 1.5.1"
-   git push origin v1.5.1
-   ```
-
-### Build Fails on a Platform
-
-If the build fails on a specific platform:
-
-1. Check the workflow logs for that platform
-2. Fix the issue in the code
-3. Delete the tag: `git tag -d v1.5.1 && git push origin :refs/tags/v1.5.1`
-4. Commit the fixes
-5. Recreate the tag and push it again
-
-### Tests Fail
-
-If tests fail during the release:
-
-1. Review the test output in the workflow logs
-2. Fix the failing tests
-3. Follow the "Build Fails on a Platform" procedure above
-
-### Release Creation Fails
-
-If the release creation step fails but all builds succeeded:
-
-1. Check if a release with that tag already exists (delete it if needed)
-2. Verify the `GITHUB_TOKEN` has sufficient permissions
-3. Re-run the workflow from the Actions tab
-
-## Manual Release Trigger
-
-The release workflow can be triggered manually for testing:
-
-1. Navigate to **Actions** → **release** workflow
-2. Click **Run workflow**
-3. Select the branch and click **Run workflow**
-
-Note: Manual triggers will attempt to extract version from the current branch/tag context.
-
-## Version Numbering
-
-This project follows [Semantic Versioning](https://semver.org/):
-
-- **MAJOR** version for incompatible API changes
-- **MINOR** version for new functionality in a backwards compatible manner
-- **PATCH** version for backwards compatible bug fixes
-
-Development versions use the `-SNAPSHOT` suffix (e.g., `1.5.2-SNAPSHOT`).
-
 ## Workflow Configuration
 
-The release workflow is defined in `.github/workflows/release.yml` and includes:
+The release workflow (`.github/workflows/release.yml`) includes:
 
-- **Trigger**: Pushes to tags matching `v*` pattern (must be on master branch)
+- **Trigger**: Tags matching `v*` pattern (must be on master branch)
 - **Platforms**: Windows x86_64, macOS ARM64, macOS x86_64, Linux x86_64
 - **Jobs**:
-  1. `verify-branch`: Verifies the tag points to a commit on the master branch
-  2. `build-and-test`: Builds and tests on all platforms in parallel (only runs if verification passes)
-  3. `create-release`: Creates GitHub Release with all artifacts after successful builds
-- **Artifacts**: Retained for 90 days (longer than regular build artifacts)
-- **Branch Restriction**: Only tags on the master branch will trigger a release build
+  1. `verify-branch`: Verifies tag points to master branch commit
+  2. `build-and-test`: Builds and tests on all platforms (parallel)
+  3. `create-release`: Creates GitHub Release with all artifacts
+
+Artifacts are retained for 90 days.
 
 ## Integration with JCC
 
-Released artifacts are designed for integration with the [JCC compiler](https://github.com/dykstrom/jcc). Users of JCC should download the appropriate platform-specific archive and follow JCC's integration documentation.
+Released artifacts are designed for the [JCC compiler](https://github.com/dykstrom/jcc). Download the appropriate platform-specific archive and follow JCC's integration documentation.
