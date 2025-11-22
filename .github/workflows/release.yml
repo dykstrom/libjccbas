@@ -111,19 +111,41 @@ jobs:
 
       # macOS already has Clang installed via Xcode Command Line Tools
 
-      - name: Verify toolchains
+      - name: Verify toolchains (Windows)
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
         run: |
           echo "=== Checking toolchains ==="
           make --version || true
           gcc --version || true
           clang --version || true
 
-      - name: Build library
+      - name: Verify toolchains (Non-Windows)
+        if: runner.os != 'Windows'
+        run: |
+          echo "=== Checking toolchains ==="
+          make --version || true
+          gcc --version || true
+          clang --version || true
+
+      - name: Build library (Windows)
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
         run: make clean && make
 
-      - name: Run tests
+      - name: Build library (Non-Windows)
+        if: runner.os != 'Windows'
+        run: make clean && make
+
+      - name: Run tests (Windows)
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
         run: ./run_all_tests.sh
+
+      - name: Run tests (Non-Windows)
+        if: runner.os != 'Windows'
         shell: bash
+        run: ./run_all_tests.sh
 
       - name: Package with Maven
         run: mvn clean package
