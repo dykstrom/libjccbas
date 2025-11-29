@@ -21,7 +21,7 @@ mvn release:prepare
 The release process consists of two parts:
 
 1. **Maven Release Plugin**: Automates version updates, Git commits, and tag creation
-2. **GitHub Actions**: Automatically builds on all platforms (Windows/macOS/Linux x86_64, macOS ARM64), runs tests, and creates GitHub Releases with artifacts
+2. **GitHub Actions**: Automatically builds on all platforms (Windows/macOS/Linux x86_64, macOS/Linux ARM64), runs tests, and creates GitHub Releases with artifacts
 
 When you run `mvn release:prepare`, it automatically:
 - Updates `pom.xml` to release version (removes `-SNAPSHOT`)
@@ -104,6 +104,7 @@ The `-B` flag runs in batch mode without prompts.
    - `libjccbas-X.Y.Z-macos-arm64.tar.gz`
    - `libjccbas-X.Y.Z-macos-x86_64.tar.gz`
    - `libjccbas-X.Y.Z-linux-x86_64.tar.gz`
+   - `libjccbas-X.Y.Z-linux-arm64.tar.gz`
 
 ## Testing Before Release
 
@@ -256,7 +257,7 @@ Each platform-specific archive contains:
 The release workflow (`.github/workflows/release.yml`) includes:
 
 - **Trigger**: Tags matching `v*` pattern (must be on master branch)
-- **Platforms**: Windows x86_64, macOS ARM64, macOS x86_64, Linux x86_64
+- **Platforms**: Windows x86_64, macOS ARM64, macOS x86_64, Linux x86_64, Linux ARM64
 - **Jobs**:
   1. `verify-branch`: Verifies tag points to master branch commit
   2. `build-and-test`: Builds and tests on all platforms (parallel)

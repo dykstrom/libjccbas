@@ -27,10 +27,11 @@ The library is automatically built and tested on multiple platforms using GitHub
 - macOS ARM64 (Apple Silicon)
 - macOS x86_64 (Intel)
 - Linux x86_64
+- Linux ARM64
 
 Build artifacts are available from the Actions tab after each workflow run.
 
-For information on creating releases, see [`RELEASE_PROCESS.md`](RELEASE_PROCESS.md) or [`MAVEN_RELEASE.md`](MAVEN_RELEASE.md).
+For information on creating releases, see [`RELEASE_PROCESS.md`](RELEASE_PROCESS.md).
 
 ### Local Development
 
@@ -82,5 +83,4 @@ mvn package
 ## Documentation
 
 - [`CLAUDE.md`](CLAUDE.md) - Detailed build system documentation and development guidelines
-- [`RELEASE_PROCESS.md`](RELEASE_PROCESS.md) - Manual release process using Git tags
-- [`MAVEN_RELEASE.md`](MAVEN_RELEASE.md) - Automated release process using Maven Release Plugin
+- [`RELEASE_PROCESS.md`](RELEASE_PROCESS.md) - Release process using Maven Release Plugin
