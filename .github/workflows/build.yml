@@ -25,7 +25,7 @@ jobs:
 
           # macOS ARM64 (Apple Silicon)
           - platform: macos-arm64
-            os: macos-14
+            os: macos-latest
             arch: arm64
             make_target: all
             artifact_pattern: "*.tar.gz"
@@ -41,6 +41,13 @@ jobs:
           - platform: linux-x86_64
             os: ubuntu-latest
             arch: x86_64
+            make_target: all
+            artifact_pattern: "*.tar.gz"
+
+          # Linux ARM64
+          - platform: linux-arm64
+            os: ubuntu-24.04-arm
+            arch: arm64
             make_target: all
             artifact_pattern: "*.tar.gz"
 
@@ -90,17 +97,29 @@ jobs:
         shell: msys2 {0}
         run: |
           echo "=== Checking toolchains ==="
+          echo "--- Java ---"
+          java -version || true
+          echo "--- OS Info ---"
+          uname -a || true
+          echo "--- Build Tools ---"
           make --version || true
           gcc --version || true
           clang --version || true
+          mvn --version || true
 
       - name: Verify toolchains (Non-Windows)
         if: runner.os != 'Windows'
         run: |
           echo "=== Checking toolchains ==="
+          echo "--- Java ---"
+          java -version || true
+          echo "--- OS Info ---"
+          uname -a || true
+          echo "--- Build Tools ---"
           make --version || true
           gcc --version || true
           clang --version || true
+          mvn --version || true
 
       - name: Build library (Windows)
         if: runner.os == 'Windows'
