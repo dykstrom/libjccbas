@@ -54,7 +54,7 @@ jobs:
 
           # macOS ARM64 (Apple Silicon)
           - platform: macos-arm64
-            os: macos-14
+            os: macos-latest
             arch: arm64
             artifact_pattern: "*.tar.gz"
 
@@ -68,6 +68,12 @@ jobs:
           - platform: linux-x86_64
             os: ubuntu-latest
             arch: x86_64
+            artifact_pattern: "*.tar.gz"
+
+          # Linux ARM64
+          - platform: linux-arm64
+            os: ubuntu-24.04-arm
+            arch: arm64
             artifact_pattern: "*.tar.gz"
 
     steps:
@@ -116,17 +122,29 @@ jobs:
         shell: msys2 {0}
         run: |
           echo "=== Checking toolchains ==="
+          echo "--- Java ---"
+          java -version || true
+          echo "--- OS Info ---"
+          uname -a || true
+          echo "--- Build Tools ---"
           make --version || true
           gcc --version || true
           clang --version || true
+          mvn --version || true
 
       - name: Verify toolchains (Non-Windows)
         if: runner.os != 'Windows'
         run: |
           echo "=== Checking toolchains ==="
+          echo "--- Java ---"
+          java -version || true
+          echo "--- OS Info ---"
+          uname -a || true
+          echo "--- Build Tools ---"
           make --version || true
           gcc --version || true
           clang --version || true
+          mvn --version || true
 
       - name: Build library (Windows)
         if: runner.os == 'Windows'
@@ -207,6 +225,7 @@ jobs:
           - **macOS ARM64**: `libjccbas.a` (Apple Silicon)
           - **macOS x86_64**: `libjccbas.a` (Intel)
           - **Linux x86_64**: `libjccbas.a`
+          - **Linux ARM64**: `libjccbas.a`
 
           ### Installation
 
@@ -239,6 +258,7 @@ jobs:
             artifacts/libjccbas-macos-arm64/*.tar.gz
             artifacts/libjccbas-macos-x86_64/*.tar.gz
             artifacts/libjccbas-linux-x86_64/*.tar.gz
+            artifacts/libjccbas-linux-arm64/*.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -247,6 +267,6 @@ jobs:
           echo "### Release ${{ steps.version.outputs.version }} created successfully! :rocket:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Tag:** ${{ steps.version.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Platforms:** Windows x86_64, macOS ARM64, macOS x86_64, Linux x86_64" >> $GITHUB_STEP_SUMMARY
+          echo "**Platforms:** Windows x86_64, macOS ARM64, macOS x86_64, Linux x86_64, Linux ARM64" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "View release at: https://github.com/${{ github.repository }}/releases/tag/${{ steps.version.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
