@@ -54,6 +54,14 @@ void assert_not_equals_F64_F64(double unexpected, double actual) {
   }
 }
 
+void assert_equals_I32_I32(int32_t expected, int32_t actual) {
+  if (expected == actual) {
+    printf("%s\n", OK);
+  } else {
+    printf("%s: expected: %d, but was: %d\n", FAIL, expected, actual);
+  }
+}
+
 void assert_equals_I64_I64(int64_t expected, int64_t actual) {
   if (expected == actual) {
     printf("%s\n", OK);
@@ -67,6 +75,14 @@ void assert_equals_Str_Str(const char* expected, const char* actual) {
     printf("%s\n", OK);
   } else {
     printf("%s: expected: '%s', but was: '%s'\n", FAIL, expected, actual);
+  }
+}
+
+void assert_equals_ptr_ptr(void* expected, void* actual) {
+  if (expected == actual) {
+    printf("%s\n", OK);
+  } else {
+    printf("%s: expected: %p, but was: %p\n", FAIL, expected, actual);
   }
 }
 
@@ -104,23 +120,15 @@ void assert_true_Bool(bool actual) {
   if (actual) {
     printf("%s\n", OK);
   } else {
-    printf("%s: expected: %d, but was: %d", FAIL, true, actual);
+    printf("%s: expected: %d, but was: %d\n", FAIL, true, actual);
   }
 }
 
-void assert_equals_int_int(int expected, int actual) {
-  if (expected == actual) {
+void assert_not_null(void* actual) {
+  if (actual) {
     printf("%s\n", OK);
   } else {
-    printf("%s: expected: %d, but was: %d\n", FAIL, expected, actual);
-  }
-}
-
-void assert_equals_ptr_ptr(void* expected, void* actual) {
-  if (expected == actual) {
-    printf("%s\n", OK);
-  } else {
-    printf("%s: expected: %p, but was: %p\n", FAIL, expected, actual);
+    printf("%s: expected: not null, but was: null\n", FAIL);
   }
 }
 

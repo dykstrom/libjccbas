@@ -32,6 +32,7 @@ HEADERS=\
 	$(MAIN_INC)/oct.h \
 	$(MAIN_INC)/pos.h \
 	$(MAIN_INC)/randomize_rnd.h \
+	$(MAIN_INC)/read_line.h \
 	$(MAIN_INC)/right.h \
 	$(MAIN_INC)/rtrim.h \
 	$(MAIN_INC)/sgn.h \
@@ -74,6 +75,7 @@ MAIN_OBJS=\
 	$(BIN)/oct.o \
 	$(BIN)/pos.o \
 	$(BIN)/randomize_rnd.o \
+	$(BIN)/read_line.o \
 	$(BIN)/right.o \
 	$(BIN)/rtrim.o \
 	$(BIN)/screen_util.o \
@@ -111,6 +113,7 @@ TEST_NAMES=\
 	test_oct \
 	test_pos \
 	test_randomize_rnd \
+	test_read_line \
 	test_right \
 	test_rtrim \
 	test_sgn \
