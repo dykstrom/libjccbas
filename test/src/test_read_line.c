@@ -7,14 +7,23 @@
 #include "read_line.h"
 
 void should_read_line(const char* input, const char* expected) {
-    // Simulate input using a temporary file
-    FILE* temp = tmpfile();
+    // Create a temporary file with the input
+    const char* filename = "test_read_line.tmp";
+    FILE* temp = fopen(filename, "w");
+    if (temp == NULL) {
+        perror("Failed to create temporary file");
+        exit(1);
+    }
     fputs(input, temp);
-    rewind(temp);
+    fclose(temp);
     
     // Redirect stdin to the temporary file
-    FILE* original_stdin = stdin;
-    stdin = temp;
+    // Note: stdin cannot be assigned to on Windows, so we use freopen
+    if (freopen(filename, "r", stdin) == NULL) {
+        perror("Failed to redirect stdin");
+        remove(filename);
+        exit(1);
+    }
     
     char* line = read_line();
     
@@ -23,9 +32,9 @@ void should_read_line(const char* input, const char* expected) {
     
     free(line);
     
-    // Restore original stdin and close temporary file
-    stdin = original_stdin;
-    fclose(temp);
+    // Close stdin to release the file lock, then remove the file
+    fclose(stdin);
+    remove(filename);
 }
 
 int main(void) {
