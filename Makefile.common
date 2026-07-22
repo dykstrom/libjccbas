@@ -22,6 +22,7 @@ HEADERS=\
 	$(MAIN_INC)/inkey.h \
 	$(MAIN_INC)/instr.h \
 	$(MAIN_INC)/int.h \
+	$(MAIN_INC)/jcc_gc.h \
 	$(MAIN_INC)/lbound_ubound.h \
 	$(MAIN_INC)/lcase.h \
 	$(MAIN_INC)/left.h \
@@ -64,6 +65,7 @@ MAIN_OBJS=\
 	$(BIN)/inkey.o \
 	$(BIN)/instr.o \
 	$(BIN)/int.o \
+	$(BIN)/jcc_gc.o \
 	$(BIN)/kbd_util.o \
 	$(BIN)/lbound_ubound.o \
 	$(BIN)/lcase.o \
@@ -103,6 +105,7 @@ TEST_NAMES=\
 	test_inkey \
 	test_instr \
 	test_int \
+	test_jcc_gc \
 	test_lbound_ubound \
 	test_lcase \
 	test_left \

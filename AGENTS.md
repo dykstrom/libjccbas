@@ -2,7 +2,7 @@
 
 ## What is this
 
-libjccbas is the JCC BASIC standard library — the runtime library for BASIC programs compiled with the [JCC compiler](https://github.com/dykstrom/jcc). It implements ~30 standard BASIC functions (string, math, type-conversion, formatting, I/O, screen/cursor, date/time, array, and GOSUB/RETURN control-flow support). It's distributed as `libjccbas.dll` on Windows and `libjccbas.a` (static) on Windows/macOS/Linux.
+libjccbas is the JCC BASIC standard library — the runtime library for BASIC programs compiled with the [JCC compiler](https://github.com/dykstrom/jcc). It implements ~30 standard BASIC functions (string, math, type-conversion, formatting, I/O, screen/cursor, date/time, array, and GOSUB/RETURN control-flow support). It also provides a runtime garbage collector (`jcc_gc`, a precise mark-and-sweep collector) for JCC's LLVM backend. It's distributed as `libjccbas.dll` on Windows and `libjccbas.a` (static) on Windows/macOS/Linux.
 
 ## Stack
 
