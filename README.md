@@ -31,7 +31,7 @@ The library is automatically built and tested on multiple platforms using GitHub
 
 Build artifacts are available from the Actions tab after each workflow run.
 
-For information on creating releases, see [`RELEASE_PROCESS.md`](RELEASE_PROCESS.md).
+For information on creating releases, see [`docs/system/release-process.md`](docs/system/release-process.md).
 
 ### Local Development
 
@@ -82,5 +82,6 @@ mvn package
 
 ## Documentation
 
-- [`CLAUDE.md`](CLAUDE.md) - Detailed build system documentation and development guidelines
-- [`RELEASE_PROCESS.md`](RELEASE_PROCESS.md) - Release process using Maven Release Plugin
+- [`AGENTS.md`](AGENTS.md) - Project overview, stack, directory index, and commands
+- [`docs/`](docs/) - Durable project context: build system, module layout, and how to add functions
+- [`docs/system/release-process.md`](docs/system/release-process.md) - Release process using the Maven Release Plugin
