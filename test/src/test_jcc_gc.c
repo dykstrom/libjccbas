@@ -16,6 +16,7 @@
  */
 
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -231,6 +232,45 @@ static void test_trace_and_finalize(void) {
   jcc_gc_pop_frame();
 }
 
+// Load: 1000 string slots as a global root, 100_000 allocations each stored
+// into a random slot. Overwriting a slot orphans its old string, so the GC
+// must collect steadily while every currently-referenced string survives.
+static void test_load(void) {
+  enum { SLOTS = 1000, ALLOCS = 100000 };
+  static void *arr[SLOTS];
+  jcc_gc_root_range_t ranges[] = { { arr, SLOTS }, { NULL, 0 } };
+  jcc_gc_stats_t s;
+  int64_t non_null;
+  int i;
+
+  memset(arr, 0, sizeof(arr));
+  jcc_gc_init(256, 0);
+  jcc_gc_set_global_roots(ranges);
+
+  for (i = 0; i < ALLOCS; i++) {
+    int r = rand() % SLOTS;
+    char *str = (char *) jcc_gc_register(malloc(16));
+    snprintf(str, 16, "s%d", i);
+    arr[r] = str;  // stored into a root before the next allocation (D9 contract)
+  }
+
+  jcc_gc_collect();  // final sweep: only strings still held by a slot survive
+
+  non_null = 0;
+  for (i = 0; i < SLOTS; i++) {
+    if (arr[i] != NULL) {
+      non_null++;
+    }
+  }
+
+  jcc_gc_stats(&s);
+  assert_equals_I64_I64(ALLOCS, s.registered);
+  assert_true_Bool(s.collections >= 1);       // the threshold must have fired
+  assert_equals_I64_I64(non_null, s.live);    // live == distinct rooted strings
+  assert_true_Bool(s.live <= SLOTS);          // can never exceed the slot count
+  assert_equals_I64_I64(s.registered, s.freed + s.live);  // nothing leaked/lost
+}
+
 // Debug output: with debug enabled and JCC_GC_LOG set, shutdown appends the
 // exact exit-stats line JCC's integration tests assert on. Runs last so the
 // atexit-installed shutdown is a no-op afterwards.
@@ -276,6 +316,7 @@ int main(void) {
   test_trigger();
   test_threshold_doubling();
   test_trace_and_finalize();
+  test_load();
   test_debug_exit_stats();
   return 0;
 }

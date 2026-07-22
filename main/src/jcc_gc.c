@@ -33,12 +33,13 @@
 /* ---- Allocation table: open-addressing hash set keyed on pointer ---- */
 
 typedef struct {
-    void                *ptr;   /* NULL slot = empty (no tombstones)        */
-    const jcc_gc_type_t *type;  /* NULL = leaf object, freed with free()    */
+    void                *ptr;   /* NULL slot = empty (no tombstones)         */
+    const jcc_gc_type_t *type;  /* NULL = leaf object, freed with free()     */
     int                  mark;  /* mark bit, cleared at the start of a sweep */
 } gc_entry_t;
 
-#define GC_INITIAL_CAPACITY 16  /* must be a power of two */
+#define GC_INITIAL_CAPACITY 16   /* must be a power of two */
+#define GC_DEFAULT_THRESHOLD 100 /* live objects that trigger the first collect */
 
 static gc_entry_t *table_entries;
 static size_t      table_capacity;
@@ -85,6 +86,29 @@ static void gc_log(const char *fmt, ...) {
 
 /* ---- Hashing and table operations ---- */
 
+/*
+ * The allocation table is an open-addressing hash set with linear probing,
+ * keyed on the object pointer. It maps a registered pointer to its entry
+ * (type descriptor + mark bit); membership is the only query the collector
+ * needs. 'capacity' is always a power of two, so the modulo reduction is a
+ * cheap bitwise AND rather than a division.
+ *
+ * hash_ptr() produces a value in [0, capacity): it drops the low 3 bits
+ * (always zero for malloc's 8-byte-aligned pointers, so they carry no
+ * information), multiplies by the 64-bit Fibonacci/golden-ratio constant to
+ * scatter the remaining bits across the whole word, then masks to the table
+ * size. That gives the index of the object's "home" slot.
+ *
+ * A slot is empty iff its ptr field is NULL. On a collision (home slot taken
+ * by a different pointer) we probe the following slots linearly, wrapping at
+ * the end, until we find the key (lookup) or an empty slot (insert / absent).
+ * There are no tombstones: entries are never deleted in place. A sweep
+ * instead rebuilds the table from the surviving entries (see jcc_gc_collect),
+ * which keeps probe chains short. table_insert() grows and rehashes before
+ * the load factor reaches 0.75, so lookups and inserts stay O(1) on average
+ * (amortised) -- this is a fast table for the expected low load factor,
+ * degrading to O(n) only if it were allowed to fill up.
+ */
 static size_t hash_ptr(const void *p, size_t capacity) {
     /* Drop the low bits (alignment) and spread the rest. */
     uintptr_t h = (uintptr_t) p >> 3;
@@ -126,6 +150,9 @@ static void table_grow(void) {
     gc_entry_t *new_entries = calloc(new_capacity, sizeof(gc_entry_t));
     size_t i;
     if (new_entries == NULL) {
+        /* Logging a fixed string is safe under OOM: 'out' is already open and
+         * we pass no arguments that require allocation. Best effort either way. */
+        gc_log("jcc_gc: out of memory growing allocation table\n");
         return; /* out of memory: leave table as-is, best effort */
     }
     for (i = 0; i < table_capacity; i++) {
@@ -207,10 +234,19 @@ void jcc_gc_init(int64_t initial_threshold, int64_t flags) {
     }
 
     table_entries = calloc(GC_INITIAL_CAPACITY, sizeof(gc_entry_t));
+    if (table_entries == NULL) {
+        /* Without the table no allocation can be tracked. Leave the collector
+         * uninitialized so register/collect no-op instead of dereferencing a
+         * NULL table. */
+        table_capacity = 0;
+        table_count = 0;
+        initialized = 0;
+        return;
+    }
     table_capacity = GC_INITIAL_CAPACITY;
     table_count = 0;
 
-    threshold = (initial_threshold <= 0) ? 100 : initial_threshold;
+    threshold = (initial_threshold <= 0) ? GC_DEFAULT_THRESHOLD : initial_threshold;
 
     dbg_env = getenv("JCC_GC_DEBUG");
     debug = ((flags & JCC_GC_DEBUG) != 0) || (dbg_env != NULL && dbg_env[0] != '\0');
@@ -252,6 +288,7 @@ void jcc_gc_push_frame(void) {
         size_t new_capacity = (frame_capacity == 0) ? 16 : frame_capacity * 2;
         size_t *grown = realloc(frames, new_capacity * sizeof(size_t));
         if (grown == NULL) {
+            gc_log("jcc_gc: out of memory growing frame stack\n");
             return; /* best effort under OOM */
         }
         frames = grown;
@@ -271,6 +308,7 @@ void jcc_gc_add_root(void **slot) {
         size_t new_capacity = (local_capacity == 0) ? 16 : local_capacity * 2;
         void ***grown = realloc(local_roots, new_capacity * sizeof(void **));
         if (grown == NULL) {
+            gc_log("jcc_gc: out of memory growing local root stack\n");
             return; /* best effort under OOM */
         }
         local_roots = grown;
@@ -336,6 +374,7 @@ void jcc_gc_collect(void) {
     new_capacity = table_capacity;
     survivors = calloc(new_capacity, sizeof(gc_entry_t));
     if (survivors == NULL) {
+        gc_log("jcc_gc: out of memory allocating survivor table; skipping sweep\n");
         return; /* OOM: skip this collection rather than corrupt state */
     }
     for (i = 0; i < table_capacity; i++) {
@@ -371,6 +410,12 @@ void jcc_gc_collect(void) {
 void *jcc_gc_register_object(void *p, const jcc_gc_type_t *type) {
     if (p == NULL) {
         return NULL;
+    }
+
+    /* Contract requires jcc_gc_init first; guard anyway so a violation (or a
+     * failed init) returns p untracked rather than dereferencing a NULL table. */
+    if (!initialized) {
+        return p;
     }
 
     /* Trigger (D9): when live objects reach the threshold, collect BEFORE
