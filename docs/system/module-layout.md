@@ -32,5 +32,5 @@ Some modules exist to support the compiler rather than to implement a BASIC intr
 
 - **String concatenation** (`add.h`/`add.c`): `add_Str_Str` implements the `+` operator on strings. Called by generated code, not a BASIC intrinsic.
 - **Line input** (`read_line.h`/`read_line.c`): `read_line` reads a line from standard input, dynamically allocating memory for variable-length input and returning a null-terminated string. Used by the compiler to implement BASIC's INPUT statement.
-- **GOSUB/RETURN stack** (`gosub.h`/`gosub.c`): runtime support for BASIC's GOSUB/RETURN control flow, called directly by LLVM IR the JCC compiler generates using `blockaddress` and `indirectbr` instructions.
+- **GOSUB/RETURN stack** (`gosub.h`/`gosub.c`): runtime support for BASIC's GOSUB/RETURN control flow, called directly by LLVM IR the JCC compiler generates using `blockaddress` and `indirectbr` instructions. See [gosub.md](gosub.md).
 - **GC support** (`jcc_gc.h`/`jcc_gc.c`): the runtime garbage collector — a precise mark-and-sweep collector with compiler-managed roots (a shadow stack). Called by JCC-generated code, not a BASIC intrinsic. The `jcc_gc.h` API is fixed by [jcc#63](https://github.com/dykstrom/jcc/issues/63) §3.2; this is the canonical copy (libjcccol vendors an identical one). See [garbage-collection.md](garbage-collection.md).
