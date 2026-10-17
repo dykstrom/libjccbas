@@ -22,6 +22,64 @@
 #define MAX_NUMBERS 100000
 #define DELTA (MAX_NUMBERS / 100.0)
 
+// Converts a 24-bit seed to the number RND returns for that seed
+#define SEED_TO_RND(seed) ((seed) / 16777216.0)
+
+// Expected values below come from the QuickBASIC 4.5 algorithm. The golden
+// tests must run first, and in order, because they depend on the initial seed.
+
+void rndZeroShouldReturnInitialSeed() {
+  assert_equals_F64_F64(SEED_TO_RND(327680), rnd_F64(0.0));
+}
+
+void rndShouldReturnQuickBasicSequence() {
+  assert_equals_F64_F64(SEED_TO_RND(11837123), rnd());
+  assert_equals_F64_F64(SEED_TO_RND(8949370), rnd());
+  assert_equals_F64_F64(SEED_TO_RND(9722709), rnd());
+  assert_equals_F64_F64(SEED_TO_RND(4858052), rnd());
+  assert_equals_F64_F64(SEED_TO_RND(5065847), rnd());
+}
+
+void rndNegativeShouldReturnQuickBasicSequence() {
+  assert_equals_F64_F64(SEED_TO_RND(3758214), rnd_F64(-1.0));
+  assert_equals_F64_F64(SEED_TO_RND(601393), rnd());
+  assert_equals_F64_F64(SEED_TO_RND(1448752), rnd());
+}
+
+void randomizeShouldReturnQuickBasicSequence() {
+  rnd_F64(-1.0);
+  randomize(10);
+  assert_equals_F64_F64(SEED_TO_RND(2410801), rnd());
+  assert_equals_F64_F64(SEED_TO_RND(3360560), rnd());
+  assert_equals_F64_F64(SEED_TO_RND(8554803), rnd());
+
+  rnd_F64(-1.0);
+  randomize(-5);
+  assert_equals_F64_F64(SEED_TO_RND(6617393), rnd());
+  assert_equals_F64_F64(SEED_TO_RND(3323696), rnd());
+  assert_equals_F64_F64(SEED_TO_RND(4471091), rnd());
+
+  rnd_F64(-1.0);
+  randomize(1234.5);
+  assert_equals_F64_F64(SEED_TO_RND(4291633), rnd());
+  assert_equals_F64_F64(SEED_TO_RND(6893104), rnd());
+  assert_equals_F64_F64(SEED_TO_RND(3986483), rnd());
+
+  assert_equals_F64_F64(SEED_TO_RND(9870467), rnd_F64(-3.5));
+}
+
+void randomizeTwiceShouldKeepLowByteOfSeed() {
+  randomize(10);
+  assert_equals_F64_F64(SEED_TO_RND(2948410), rnd());
+  assert_equals_F64_F64(SEED_TO_RND(13766421), rnd());
+  assert_equals_F64_F64(SEED_TO_RND(1049988), rnd());
+
+  randomize(10);
+  assert_equals_F64_F64(SEED_TO_RND(2769207), rnd());
+  assert_equals_F64_F64(SEED_TO_RND(15890206), rnd());
+  assert_equals_F64_F64(SEED_TO_RND(3551593), rnd());
+}
+
 void randomNumbersShouldBeRandom() {
   randomize(timer());
   double a = rnd();
@@ -36,11 +94,13 @@ void sameSeedShouldGiveSameNumbers() {
   static double random_numbers1[MAX_NUMBERS];
   static double random_numbers2[MAX_NUMBERS];
 
+  rnd_F64(-1.0);
   randomize(10);
   for (int i = 0; i < MAX_NUMBERS; i++) {
     random_numbers1[i] = rnd();
   }
 
+  rnd_F64(-1.0);
   randomize(10);
   for (int i = 0; i < MAX_NUMBERS; i++) {
     random_numbers2[i] = rnd();
@@ -96,9 +156,11 @@ void seedGtZeroShouldReturnNextNumber() {
 }
 
 void seedLtZeroShouldReseedRNG() {
-  randomize(-1.0);
-  double expected = rnd();
-  assert_equals_F64_F64(expected, rnd_F64(-1.0));
+  randomize(timer());
+  rnd();
+  assert_equals_F64_F64(SEED_TO_RND(3758214), rnd_F64(-1.0));
+  rnd();
+  assert_equals_F64_F64(SEED_TO_RND(3758214), rnd_F64(-1.0));
 }
 
 void allNumbersShouldBeInValidRange() {
@@ -115,6 +177,11 @@ void allNumbersShouldBeInValidRange() {
 }
 
 int main(int argc, char *argv[]) {
+  rndZeroShouldReturnInitialSeed();
+  rndShouldReturnQuickBasicSequence();
+  rndNegativeShouldReturnQuickBasicSequence();
+  randomizeShouldReturnQuickBasicSequence();
+  randomizeTwiceShouldKeepLowByteOfSeed();
   randomNumbersShouldBeRandom();
   sameSeedShouldGiveSameNumbers();
   differentSeedShouldGiveDifferentNumbers();
