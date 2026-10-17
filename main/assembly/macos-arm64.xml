@@ -15,7 +15,7 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>${project.basedir}/bin/clang</directory>
+            <directory>${project.basedir}/bin</directory>
             <outputDirectory>lib</outputDirectory>
             <includes>
                 <include>libjccbas.a</include>

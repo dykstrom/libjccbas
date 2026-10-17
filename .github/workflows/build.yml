@@ -16,12 +16,27 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Windows x86_64
+          # Windows x86_64 — MSYS2 MINGW64 environment
           - platform: windows-x86_64
             os: windows-latest
             arch: x86_64
             make_target: all
             artifact_pattern: "*.zip"
+            msys2_system: MINGW64
+            msys2_clang_pkg: mingw-w64-x86_64-clang
+            msys2_llvm_pkg: mingw-w64-x86_64-llvm
+            msys2_bin: C:/msys64/mingw64/bin
+
+          # Windows ARM64 — MSYS2 CLANGARM64 environment
+          - platform: windows-arm64
+            os: windows-11-arm
+            arch: arm64
+            make_target: all
+            artifact_pattern: "*.zip"
+            msys2_system: CLANGARM64
+            msys2_clang_pkg: mingw-w64-clang-aarch64-clang
+            msys2_llvm_pkg: mingw-w64-clang-aarch64-llvm
+            msys2_bin: C:/msys64/clangarm64/bin
 
           # macOS ARM64 (Apple Silicon)
           - platform: macos-arm64
@@ -59,28 +74,26 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
-      # Windows-specific: Install MinGW-w64 for GCC and Clang
-      # GCC builds libjccbas.dll with msvcrt.dll (legacy CRT) for FASM compatibility
-      # Clang builds libjccbas.a with UCRT (Universal CRT) for modern toolchain compatibility
-      - name: Install MSYS2 with MinGW (Windows)
+      # Windows-specific: Install MSYS2 with Clang, which builds libjccbas.a.
+      # The matrix selects MINGW64 on x86_64 and CLANGARM64 on arm64.
+      - name: Install MSYS2 with Clang (Windows)
         if: runner.os == 'Windows'
         uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64
+          msystem: ${{ matrix.msys2_system }}
           update: true
           install: >-
-            mingw-w64-x86_64-gcc
-            mingw-w64-x86_64-clang
-            mingw-w64-x86_64-llvm
+            ${{ matrix.msys2_clang_pkg }}
+            ${{ matrix.msys2_llvm_pkg }}
             make
 
       - name: Add MinGW to PATH (Windows)
         if: runner.os == 'Windows'
         shell: bash
         run: |
-          echo "C:/msys64/mingw64/bin" >> $GITHUB_PATH
+          echo "${{ matrix.msys2_bin }}" >> $GITHUB_PATH
           echo "C:/msys64/usr/bin" >> $GITHUB_PATH
 
       # Linux-specific: Install Clang
@@ -103,7 +116,6 @@ jobs:
           uname -a || true
           echo "--- Build Tools ---"
           make --version || true
-          gcc --version || true
           clang --version || true
           mvn --version || true
 
@@ -117,7 +129,6 @@ jobs:
           uname -a || true
           echo "--- Build Tools ---"
           make --version || true
-          gcc --version || true
           clang --version || true
           mvn --version || true
 
@@ -133,12 +144,11 @@ jobs:
       - name: Run tests (Windows)
         if: runner.os == 'Windows'
         shell: msys2 {0}
-        run: ./run_all_tests.sh
+        run: make test
 
       - name: Run tests (Non-Windows)
         if: runner.os != 'Windows'
-        shell: bash
-        run: ./run_all_tests.sh
+        run: make test
 
       - name: Package with Maven
         run: mvn clean package

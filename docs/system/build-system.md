@@ -1,59 +1,68 @@
 # Build system
 
-libjccbas uses a hybrid build: GNU Make for native compilation, Maven for packaging and release.
+libjccbas uses GNU Make to compile and test, and Maven to package and release. Clang builds the static library `libjccbas.a` on every platform.
 
-## Platform and architecture detection
+## Makefile
 
-Detection is automatic. The top-level `Makefile` selects the platform: Darwin → macOS, Linux → Linux, otherwise → Windows. It then includes the matching per-platform makefile.
+A single `Makefile` builds the library and the tests. It has no file lists:
 
-On Windows the build detects ARM64 vs x86_64 by checking `PROCESSOR_IDENTIFIER` and `uname -a` output, because emulation layers (e.g. Git Bash x86_64 on ARM64) can mask the real hardware architecture. The build always targets the native architecture — no cross-compilation.
+- Every `.c` file in `main/src/` goes into the library.
+- Every `.c` file in `test/src/` becomes one test executable.
+- Clang writes a `.d` file next to each object (`-MMD -MP`), and `make` includes these files. A changed header therefore recompiles every object that includes it.
 
-## Makefile structure
+`CC` defaults to `clang` and `AR` defaults to `ar`. You can override both on the command line, for example `make CC=clang-21`.
 
-Split across files to avoid repetition:
+Clang builds for the host platform and architecture. There is no cross-compilation and no architecture detection. On Windows, the MSYS2 environment decides the target: MINGW64 builds x86_64 and CLANGARM64 builds ARM64.
 
-| File | Role |
-|------|------|
-| `Makefile` | Main entry point; platform detection |
-| `Makefile.common` | Shared variables and the `HEADERS`, `MAIN_OBJS`, `TEST_NAMES` file lists |
-| `Makefile.windows` | Windows configuration (with `Makefile.windows.gcc` and `Makefile.windows.clang`) |
-| `Makefile.macos` | macOS configuration |
-| `Makefile.linux` | Linux configuration |
+Platform differences in the `Makefile`:
 
-## Build process (`make`)
+| Platform | Difference |
+|----------|------------|
+| Windows | Test executables get the `.exe` suffix. The `Makefile` detects Windows when `uname -s` contains `MINGW` or when `OS` is `Windows_NT`. |
+| Linux | Test executables link with `-lm`. |
 
-1. Platform and architecture are detected.
-2. `bin/` subdirectories are created — Windows makes both `bin/gcc` and `bin/clang`; macOS/Linux make only `bin/clang`.
-3. `main/src/*.c` is compiled to `bin/gcc/*.o` or `bin/clang/*.o` with the platform compiler and flags.
-4. Object files are linked/archived into the library:
-   - Windows GCC → `bin/gcc/libjccbas.dll`
-   - Windows/macOS/Linux Clang → `bin/clang/libjccbas.a`
-5. `test/src/*.c` is compiled with the test includes.
-6. Test executables are linked against the library.
+## Targets
 
-`make clean` removes the entire `bin/` directory.
+| Target | What it does |
+|--------|--------------|
+| `make` (`all`) | Builds `bin/libjccbas.a` and all test executables. |
+| `make test` | Builds, then runs every test executable and prints its output. Exits non-zero if any test exits non-zero or prints `FAIL`. |
+| `make clean` | Removes `bin/`. |
+| `make help` | Lists the targets. |
 
-## Windows C runtime split
+The assertions in `test/inc/assert.h` print `FAIL` but do not set an exit code. This is why `make test` also searches the test output for `FAIL`. It runs all tests, even after a failure, and lists the failed tests at the end.
 
-`libjccbas.dll` (GCC/MinGW build) links against the legacy `msvcrt.dll`, for compatibility with FASM-generated executables. `libjccbas.a` (Clang build) links against UCRT, for modern LLVM/Clang toolchains. This split is intentional; do not unify the two without checking both consumers.
+`make test` captures test output, so stdout is not a terminal. The POS and CSRLIN tests then skip. Run `./bin/test_pos` or `./bin/test_csrlin` directly in a terminal to exercise them.
 
-## Windows ARM64 support
+## Output layout
 
-The build produces only `libjccbas.a` (Clang) on Windows ARM64, not `libjccbas.dll` (GCC). No mingw-w64 GCC targets Windows ARM64, and `Makefile.windows.gcc` hardcodes `gcc`; a plain `make` (which runs `all-gcc all-clang`) fails at the GCC step on ARM64. `Makefile.windows.clang` already maps `aarch64` to the `aarch64-pc-windows-gnu` target, so the Clang path is ARM64-ready — build `make all-clang` there. CI has no Windows ARM64 job for this reason; adding one is deferred until the GCC DLL is phased out.
+| Path | Contents |
+|------|----------|
+| `bin/libjccbas.a` | The library |
+| `bin/test_*` (`.exe` on Windows) | Test executables |
+| `bin/obj/` | Library objects and their `.d` files |
+| `bin/obj/test/` | Test objects and their `.d` files |
 
 ## Maven packaging (`mvn package`)
 
-Produces distribution archives (zip/tar.gz) under `target/` containing the libraries (`lib/libjccbas.dll` and/or `lib/libjccbas.a`, depending on what was built), the public headers (`inc/`), README, and LICENSE. The assembly plugin copies resources from `bin/` and `main/inc/` into `target/` during the build. Because Maven copies only from `main/inc/`, internal `*_util.h` headers in `main/src/` are never distributed.
+`mvn package` builds a distribution archive under `target/`, named `libjccbas-<version>-<platform>.zip` on Windows and `libjccbas-<version>-<platform>.tar.gz` elsewhere. A Maven profile selects the platform from the OS and architecture, and each platform has an assembly descriptor in `main/assembly/`.
+
+The archive contains `lib/libjccbas.a`, the public headers in `inc/`, `README.md`, and `LICENSE`. Run `make` before `mvn package`, because Maven copies the library from `bin/`. Maven copies headers only from `main/inc/`, so the internal `*_util.h` headers in `main/src/` are never distributed.
+
+JCC downloads the archive from GitHub Releases by this file name and copies out `libjccbas.a`. The file name pattern must not change.
 
 ## Continuous integration
 
-- `.github/workflows/build.yml` — runs on pushes and pull requests for all branches. Builds Windows x86_64, macOS ARM64/x86_64, and Linux x86_64/ARM64.
-- `.github/workflows/release.yml` — runs when a version tag (e.g. `v1.5.1`) is pushed from master. Builds on all platforms, runs tests, and creates a GitHub Release with the distribution artifacts.
+- `.github/workflows/build.yml` runs on pushes and pull requests for all branches.
+- `.github/workflows/release.yml` runs when a version tag (e.g. `v3.0.0`) is pushed from master. It creates a GitHub Release with the distribution archives.
 
-Release procedure is documented in `release-process.md` (Maven Release Plugin, with a manual fallback).
+Both workflows build on six platforms: Windows x86_64 and ARM64, macOS ARM64 and x86_64, and Linux x86_64 and ARM64. Each job runs `make`, `make test`, and `mvn package`. The Windows jobs use MSYS2 with the MINGW64 environment on x86_64 and the CLANGARM64 environment on ARM64.
+
+`release-process.md` describes the release procedure.
 
 ## Development requirements
 
-- **Windows (x86_64 or arm64):** MinGW-w64 (64-bit GCC) for the DLL build; LLVM-MinGW toolchain (e.g. llvm-mingw-ucrt) for the Clang `.a` build; GNU Make; Unix tools `mkdir`, `rm` (via GnuWin32 CoreUtils or Git Bash).
-- **macOS (arm64 or x86_64):** Clang/LLVM and GNU Make (Xcode Command Line Tools or Homebrew); built-in Unix tools.
-- **Linux (arm64 or x86_64):** Clang/LLVM, GNU Make, built-in Unix tools.
+- **Windows (x86_64 or ARM64):** Clang/LLVM, GNU Make, and a POSIX shell with `uname`. CI uses MSYS2, in the MINGW64 environment on x86_64 or the CLANGARM64 environment on ARM64. The llvm-mingw toolchain with GnuWin32 make 3.81, run from Git Bash, also works.
+- **macOS (ARM64 or x86_64):** Clang/LLVM and GNU Make from the Xcode Command Line Tools or Homebrew.
+- **Linux (ARM64 or x86_64):** Clang/LLVM and GNU Make.
+- **Packaging:** A JDK and Maven, to run `mvn package`.

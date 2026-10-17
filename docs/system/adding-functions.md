@@ -5,10 +5,9 @@
 1. Create `main/inc/function_name.h` with the function declaration (public API).
 2. Create `main/src/function_name.c` with the implementation.
 3. Create `test/src/test_function_name.c` with unit tests using the `assert.h` macros.
-4. Add the header to `HEADERS` in `Makefile.common`.
-5. Add the object file to `MAIN_OBJS` in `Makefile.common`.
-6. Add the test executable to `TEST_NAMES` in `Makefile.common`.
-7. Run `make`, then `./run_all_tests.sh` to verify.
+4. Run `make test` to verify.
+
+The `Makefile` finds new `.c` files and tracks header dependencies by itself, so you do not edit it.
 
 ## Adding an internal utility function
 
@@ -16,15 +15,14 @@ For helpers that are not part of the public BASIC API:
 
 1. Create `main/src/util_name.h` with the internal declarations.
 2. Create `main/src/util_name.c` with the implementation.
-3. Add the header to `HEADERS` in `Makefile.common` (at the end, before `assert.h`).
-4. Add the object file to `MAIN_OBJS` in `Makefile.common`.
-5. The header stays in `main/src/`, so Maven never distributes it (it copies public headers only from `main/inc/`).
+3. The header stays in `main/src/`, so Maven never distributes it (it copies public headers only from `main/inc/`).
 
 ## Platform-specific code
 
 - Use `#ifdef _WIN32` for Windows-specific code, `#else` for Unix-like systems (macOS/Linux).
 - For reusable platform-specific code, add to or create a shared utility module (see `kbd_util`, `time_util`, `screen_util`).
 - Terminal-dependent tests must check `isatty()` and skip gracefully when not run in an appropriate environment.
+- On Windows the default stack is 1 MB. A test that declares large local arrays crashes there with exit code `0xC00000FD` (stack overflow) and prints nothing. Declare large arrays `static`, as `test_randomize_rnd.c` does.
 
 ## Code conventions
 

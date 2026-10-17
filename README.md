@@ -12,10 +12,7 @@ The JCC BASIC standard library - a part of [JCC](https://github.com/dykstrom/jcc
 
 ## Using
 
-The JCC BASIC standard library is designed to be used with the [JCC compiler](https://github.com/dykstrom/jcc). It is distributed as:
-
-- **Windows**: `libjccbas.dll` (linked with msvcrt.dll for FASM) and `libjccbas.a` (linked with UCRT for LLVM/Clang)
-- **macOS/Linux**: `libjccbas.a` (static library)
+The JCC BASIC standard library is designed to be used with the [JCC compiler](https://github.com/dykstrom/jcc). It is distributed as a static library, `libjccbas.a`, for Windows, macOS, and Linux.
 
 ## Building
 
@@ -24,6 +21,7 @@ The JCC BASIC standard library is designed to be used with the [JCC compiler](ht
 The library is automatically built and tested on multiple platforms using GitHub Actions:
 
 - Windows x86_64
+- Windows ARM64
 - macOS ARM64 (Apple Silicon)
 - macOS x86_64 (Intel)
 - Linux x86_64
@@ -35,16 +33,11 @@ For information on creating releases, see [`docs/system/release-process.md`](doc
 
 ### Local Development
 
-To build the JCC BASIC standard library locally, you need platform-specific toolchains.
+To build the JCC BASIC standard library locally, you need Clang/LLVM and GNU Make.
 
 **Windows:**
 
-- 64-bit MinGW-w64 (GCC) - builds `libjccbas.dll` with msvcrt.dll
-- Clang/LLVM - builds `libjccbas.a` with UCRT
-- GNU Make
-- Basic Unix tools (mkdir, rm)
-
-**Note on Windows C Runtime:** The DLL is intentionally linked with the legacy msvcrt.dll (Microsoft C Runtime) instead of UCRT (Universal CRT) to ensure compatibility with FASM-generated executables. The static library uses UCRT for compatibility with modern LLVM/Clang toolchains.
+- [MSYS2](https://www.msys2.org) with Clang/LLVM and GNU Make. Use the MINGW64 environment on x86_64 and the CLANGARM64 environment on ARM64.
 
 **macOS:**
 
@@ -56,25 +49,14 @@ To build the JCC BASIC standard library locally, you need platform-specific tool
 - Clang/LLVM
 - GNU Make
 
-### Installation Instructions
-
-**mingw-w64 (Windows):**
-The 64-bit version of MinGW can be downloaded from [mingw-w64](https://mingw-w64.org) or as pre-built binaries from [MinGW-W64-binaries](https://github.com/niXman/mingw-builds-binaries).
-
-**make (Windows):**
-GNU make for Windows can be downloaded from the [GnuWin32](http://gnuwin32.sourceforge.net/packages/make.htm) project.
-
-**mkdir and rm (Windows):**
-The makefile uses the \*nix tools mkdir and rm. These can be downloaded from the [GnuWin32](http://gnuwin32.sourceforge.net/packages/coreutils.htm) project as part of the CoreUtils package. Alternatively, install bash as part of [Git](https://git-scm.com).
-
 ### Build Commands
 
 ```bash
-# Build library
+# Build library and tests
 make
 
-# Run tests
-./run_all_tests.sh
+# Build and run tests
+make test
 
 # Package with Maven
 mvn package

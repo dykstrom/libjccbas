@@ -33,8 +33,8 @@ void randomNumbersShouldBeRandom() {
 }
 
 void sameSeedShouldGiveSameNumbers() {
-  double random_numbers1[MAX_NUMBERS];
-  double random_numbers2[MAX_NUMBERS];
+  static double random_numbers1[MAX_NUMBERS];
+  static double random_numbers2[MAX_NUMBERS];
 
   randomize(10);
   for (int i = 0; i < MAX_NUMBERS; i++) {
@@ -50,8 +50,8 @@ void sameSeedShouldGiveSameNumbers() {
 }
 
 void differentSeedShouldGiveDifferentNumbers() {
-  double random_numbers1[MAX_NUMBERS];
-  double random_numbers2[MAX_NUMBERS];
+  static double random_numbers1[MAX_NUMBERS];
+  static double random_numbers2[MAX_NUMBERS];
 
   randomize(10);
   for (int i = 0; i < MAX_NUMBERS; i++) {
