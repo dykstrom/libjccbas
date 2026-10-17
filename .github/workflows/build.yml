@@ -16,16 +16,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Windows x86_64 — MSYS2 MINGW64 environment
+          # Windows x86_64 — MSYS2 CLANG64 environment
           - platform: windows-x86_64
             os: windows-latest
             arch: x86_64
             make_target: all
             artifact_pattern: "*.zip"
-            msys2_system: MINGW64
-            msys2_clang_pkg: mingw-w64-x86_64-clang
-            msys2_llvm_pkg: mingw-w64-x86_64-llvm
-            msys2_bin: C:/msys64/mingw64/bin
+            msys2_system: CLANG64
+            msys2_clang_pkg: mingw-w64-clang-x86_64-clang
+            msys2_llvm_pkg: mingw-w64-clang-x86_64-llvm
+            msys2_bin: C:/msys64/clang64/bin
 
           # Windows ARM64 — MSYS2 CLANGARM64 environment
           - platform: windows-arm64
@@ -77,7 +77,7 @@ jobs:
           java-version: '21'
 
       # Windows-specific: Install MSYS2 with Clang, which builds libjccbas.a.
-      # The matrix selects MINGW64 on x86_64 and CLANGARM64 on arm64.
+      # The matrix selects CLANG64 on x86_64 and CLANGARM64 on arm64.
       - name: Install MSYS2 with Clang (Windows)
         if: runner.os == 'Windows'
         uses: msys2/setup-msys2@v2

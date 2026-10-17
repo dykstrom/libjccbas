@@ -37,7 +37,7 @@ To build the JCC BASIC standard library locally, you need Clang/LLVM and GNU Mak
 
 **Windows:**
 
-- [MSYS2](https://www.msys2.org) with Clang/LLVM and GNU Make. Use the MINGW64 environment on x86_64 and the CLANGARM64 environment on ARM64.
+- [MSYS2](https://www.msys2.org) with Clang/LLVM and GNU Make. Use the CLANG64 environment on x86_64 and the CLANGARM64 environment on ARM64.
 
 **macOS:**
 

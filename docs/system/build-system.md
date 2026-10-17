@@ -12,7 +12,7 @@ A single `Makefile` builds the library and the tests. It has no file lists:
 
 `CC` defaults to `clang` and `AR` defaults to `ar`. You can override both on the command line, for example `make CC=clang-21`.
 
-Clang builds for the host platform and architecture. There is no cross-compilation and no architecture detection. On Windows, the MSYS2 environment decides the target: MINGW64 builds x86_64 and CLANGARM64 builds ARM64.
+Clang builds for the host platform and architecture. There is no cross-compilation and no architecture detection. On Windows, the MSYS2 environment decides the target: CLANG64 builds x86_64 and CLANGARM64 builds ARM64. Both are MSYS2 Clang environments, so both Windows archives are built against the UCRT C runtime, not the older `msvcrt`. A Windows program that links `libjccbas.a` must also target UCRT.
 
 Platform differences in the `Makefile`:
 
@@ -56,13 +56,13 @@ JCC downloads the archive from GitHub Releases by this file name and copies out 
 - `.github/workflows/build.yml` runs on pushes and pull requests for all branches.
 - `.github/workflows/release.yml` runs when a version tag (e.g. `v3.0.0`) is pushed from master. It creates a GitHub Release with the distribution archives.
 
-Both workflows build on six platforms: Windows x86_64 and ARM64, macOS ARM64 and x86_64, and Linux x86_64 and ARM64. Each job runs `make`, `make test`, and `mvn package`. The Windows jobs use MSYS2 with the MINGW64 environment on x86_64 and the CLANGARM64 environment on ARM64.
+Both workflows build on six platforms: Windows x86_64 and ARM64, macOS ARM64 and x86_64, and Linux x86_64 and ARM64. Each job runs `make`, `make test`, and `mvn package`. The Windows jobs use MSYS2 with the CLANG64 environment on x86_64 and the CLANGARM64 environment on ARM64.
 
 `release-process.md` describes the release procedure.
 
 ## Development requirements
 
-- **Windows (x86_64 or ARM64):** Clang/LLVM, GNU Make, and a POSIX shell with `uname`. CI uses MSYS2, in the MINGW64 environment on x86_64 or the CLANGARM64 environment on ARM64. The llvm-mingw toolchain with GnuWin32 make 3.81, run from Git Bash, also works.
+- **Windows (x86_64 or ARM64):** Clang/LLVM, GNU Make, and a POSIX shell with `uname`. CI uses MSYS2, in the CLANG64 environment on x86_64 or the CLANGARM64 environment on ARM64. The llvm-mingw toolchain with GnuWin32 make 3.81, run from Git Bash, also works.
 - **macOS (ARM64 or x86_64):** Clang/LLVM and GNU Make from the Xcode Command Line Tools or Homebrew.
 - **Linux (ARM64 or x86_64):** Clang/LLVM and GNU Make.
 - **Packaging:** A JDK and Maven, to run `mvn package`.
