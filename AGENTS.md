@@ -2,7 +2,7 @@
 
 ## What is this
 
-libjccbas is the JCC BASIC standard library — the runtime library for BASIC programs compiled with the [JCC compiler](https://github.com/dykstrom/jcc). It implements ~30 standard BASIC functions (string, math, type-conversion, formatting, I/O, screen/cursor, date/time, array, and GOSUB/RETURN control-flow support). It also provides a runtime garbage collector (`jcc_gc`, a precise mark-and-sweep collector) for JCC's LLVM backend. It's distributed as the static library `libjccbas.a` on Windows, macOS, and Linux.
+libjccbas is the JCC BASIC standard library — the runtime library for BASIC programs compiled with the [JCC compiler](https://github.com/dykstrom/jcc). It implements ~30 standard BASIC functions (string, math, type-conversion, formatting, I/O, screen/cursor, date/time, and GOSUB/RETURN control-flow support). It also provides a runtime garbage collector (`jcc_gc`, a precise mark-and-sweep collector) for JCC's LLVM backend. It's distributed as the static library `libjccbas.a` on Windows, macOS, and Linux.
 
 ## Stack
 
@@ -41,7 +41,7 @@ docs/
 |------|---------|
 | Build library + tests | `make` (Clang builds for the host platform and architecture) |
 | Run all tests | `make test` (runs every test executable; fails if a test exits non-zero or prints FAIL) |
-| Run one test | `./bin/test_asc` (macOS/Linux) or `./bin/test_asc.exe` (Windows) |
+| Run one test | `./bin/test_chr` (macOS/Linux) or `./bin/test_chr.exe` (Windows) |
 | Clean | `make clean` (removes `bin/`) |
 | Package | `mvn package` (distribution zip/tar.gz in `target/`) |
 

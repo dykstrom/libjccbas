@@ -20,7 +20,6 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "asc.h"
 #include "assert.h"
 #include "inkey.h"
 
@@ -34,7 +33,7 @@ void should_wait_for_q() {
   char* actual = inkey$();
   while (strcmp(actual, "q") != 0) {
     if (strcmp("", actual) != 0) {
-      printf("%s - %" PRId64 "\n", actual, asc(actual));
+      printf("%s - %d\n", actual, (unsigned char) actual[0]);
     }
     free(actual);
     actual = inkey$();

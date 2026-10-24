@@ -8,15 +8,16 @@ The library implements ~30 functions:
 
 | Category | Functions |
 |----------|-----------|
-| String | ASC, CHR$, COMMAND$, INSTR, LCASE$, LEFT$, LTRIM$, MID$, RIGHT$, RTRIM$, SPACE$, STR$, STRING$, UCASE$ |
-| Type conversion | CDBL, CINT, FIX, INT, MKD$, CVD, MKI$, CVI |
-| Math | SGN, RANDOMIZE, RND |
+| String | CHR$, COMMAND$, INSTR, LCASE$, LEFT$, LTRIM$, MID$, RIGHT$, RTRIM$, SPACE$, STR$, STRING$, UCASE$ |
+| Type conversion | MKD$, CVD, MKI$, CVI |
+| Math | RANDOMIZE, RND |
 | Formatting | HEX$, OCT$ |
 | I/O | INKEY$ |
 | Screen/cursor | POS, CSRLIN |
 | System | DATE$, TIME$, SLEEP, TIMER |
-| Array | LBOUND, UBOUND |
 | Control flow | GOSUB/RETURN stack management (`gosub_push`, `gosub_pop`, `gosub_init`, `gosub_depth`) |
+
+JCC's LLVM backend generates some BASIC built-ins inline, so it does not call a library version of them. These built-ins are ASC, CDBL, CINT, FIX, INT, SGN, LBOUND, and UBOUND. Version 3.0.0 removed them from the library, see [#9](https://github.com/dykstrom/libjccbas/issues/9).
 
 ## Internal platform utility modules
 
