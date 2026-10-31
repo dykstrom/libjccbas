@@ -22,7 +22,7 @@
 
 #include "stringd.h"
 
-char *string$_I64(int64_t len, int64_t code) {
+char *bas_string_i64_i64(int64_t len, int64_t code) {
   if (len < 0 || code < 0 || code > 255) {
     printf("Error: Illegal function call: string$(%" PRId64 ", %" PRId64 ")", len, code);
     exit(1);
@@ -34,7 +34,7 @@ char *string$_I64(int64_t len, int64_t code) {
   return result;
 }
 
-char *string$_Str(int64_t len, const char *s) {
+char *bas_string_i64_str(int64_t len, const char *s) {
   if (len < 0 || strlen(s) < 1) {
     printf("Error: Illegal function call: string$(%" PRId64 ", \"%s\")", len, s);
     exit(1);

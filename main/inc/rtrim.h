@@ -15,12 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RTRIM$_H_
-#define RTRIM$_H_
+#ifndef JCCBAS_RTRIM_H
+#define JCCBAS_RTRIM_H
 
 // Returns a copy of the given string, with trailing whitespace removed.
 // This function allocates memory. It is the caller's responsibility to
 // free this memory.
-char* rtrim$(const char* s);
+char* bas_rtrim_str(const char* s);
 
-#endif /* RTRIM$_H_ */
+#endif /* JCCBAS_RTRIM_H */

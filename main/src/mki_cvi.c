@@ -20,14 +20,14 @@
 
 #include "mki_cvi.h"
 
-char* mki$(int64_t number) {
+char* bas_mki_i64(int64_t number) {
   char *result = (char *) malloc(9);
   memcpy(result, &number, 8);
   result[8] = 0;
   return result;
 }
 
-int64_t cvi(const char* s) {
+int64_t bas_cvi_str(const char* s) {
   int64_t result;
   memcpy(&result, s, 8);
   return result;

@@ -27,12 +27,12 @@ int main(int argc, char *argv[])
 
 #ifndef _WIN32
   // Initialize command line on Unix-like systems
-  init_command_line(argc, argv);
+  bas_init_command_line(argc, argv);
 #endif
 
-  actual = command$();
+  actual = bas_command();
 
-  assert_true_Bool(strstr(actual, "test_command") != 0);
+  assert_true_bool(strstr(actual, "test_command") != 0);
 
   free(actual);
 }

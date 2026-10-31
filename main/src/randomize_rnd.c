@@ -32,7 +32,7 @@
 // The current seed, initialized to the same value as in QuickBASIC 4.5
 static uint32_t seed = 327680u;
 
-void randomize(double n) {
+void bas_randomize_f64(double n) {
   // Use the high 32 bits of the double, folded into 16 bits,
   // as the middle 16 bits of the seed, and keep the low byte
   uint64_t bits;
@@ -42,11 +42,11 @@ void randomize(double n) {
   seed = ((m & 0xFFFFu) << 8) | (seed & 0xFFu);
 }
 
-double rnd() {
-  return rnd_F64(1.0);
+double bas_rnd() {
+  return bas_rnd_f64(1.0);
 }
 
-double rnd_F64(double n) {
+double bas_rnd_f64(double n) {
   if (n < 0.0) {
     // Use the bits of the single precision float as the new seed
     float f = (float) n;

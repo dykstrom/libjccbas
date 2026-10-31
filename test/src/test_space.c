@@ -23,15 +23,15 @@
 int main(int argc, char *argv[]) {
   char *actual;
 
-  actual = space$(0);
-  assert_equals_Str_Str("", actual);
+  actual = bas_space_i64(0);
+  assert_equals_str_str("", actual);
   free(actual);
 
-  actual = space$(1);
-  assert_equals_Str_Str(" ", actual);
+  actual = bas_space_i64(1);
+  assert_equals_str_str(" ", actual);
   free(actual);
 
-  actual = space$(10);
-  assert_equals_Str_Str("          ", actual);
+  actual = bas_space_i64(10);
+  assert_equals_str_str("          ", actual);
   free(actual);
 }

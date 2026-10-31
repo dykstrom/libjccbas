@@ -15,13 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SPACE$_H_
-#define SPACE$_H_
+#ifndef JCCBAS_SPACE_H
+#define JCCBAS_SPACE_H
 
 #include <stdint.h>
 
 // Returns a string of spaces of length n. This function allocates
 // memory. It is the caller's responsibility to free this memory.
-char *space$(int64_t n);
+char *bas_space_i64(int64_t n);
 
-#endif /* SPACE$_H_ */
+#endif /* JCCBAS_SPACE_H */

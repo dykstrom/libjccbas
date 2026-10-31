@@ -15,13 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef READ_LINE_H
-#define READ_LINE_H
+#ifndef JCCBAS_READ_LINE_H
+#define JCCBAS_READ_LINE_H
 
 // Read a line from standard input. Reads characters from stdin until 
 // a newline or EOF is encountered. The returned string is null-terminated 
 // and does not include the newline. This function allocates memory. 
 // It is the caller's responsibility to free this memory.
-char* read_line(void);
+char* bas_read_line(void);
 
 #endif

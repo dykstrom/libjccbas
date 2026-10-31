@@ -15,11 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TIMER_H_
-#define TIMER_H_
+#ifndef JCCBAS_TIMER_H
+#define JCCBAS_TIMER_H
 
 // Returns the number of seconds since midnight.
 // The decimals represent milliseconds.
-double timer();
+double bas_timer();
 
-#endif /* TIMER_H_ */
+#endif /* JCCBAS_TIMER_H */

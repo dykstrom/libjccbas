@@ -15,18 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MKD$_CVD_H_
-#define MKD$_CVD_H_
+#ifndef JCCBAS_MKD_CVD_H
+#define JCCBAS_MKD_CVD_H
 
 #include <stdint.h>
 
 // Converts a double to an eight-byte string. Note that the returned
 // string may contain null characters. This function allocates memory.
 // It is the caller's responsibility to free this memory.
-char* mkd$(double number);
+char* bas_mkd_f64(double number);
 
 // Convert a string containing a numeric value to a double.
-// This function is the inverse of mkd$.
-double cvd(const char* s);
+// This function is the inverse of bas_mkd_f64.
+double bas_cvd_str(const char* s);
 
-#endif /* MKD$_CVD_H_ */
+#endif /* JCCBAS_MKD_CVD_H */

@@ -23,31 +23,31 @@
 int main(int argc, char *argv[]) {
   char* actual;
 
-  actual = add_Str_Str("", "");
-  assert_equals_Str_Str("", actual);
+  actual = bas_add_str_str("", "");
+  assert_equals_str_str("", actual);
   free(actual);
 
-  actual = add_Str_Str("abc", "");
-  assert_equals_Str_Str("abc", actual);
+  actual = bas_add_str_str("abc", "");
+  assert_equals_str_str("abc", actual);
   free(actual);
 
-  actual = add_Str_Str("", "def");
-  assert_equals_Str_Str("def", actual);
+  actual = bas_add_str_str("", "def");
+  assert_equals_str_str("def", actual);
   free(actual);
 
-  actual = add_Str_Str("abc", "def");
-  assert_equals_Str_Str("abcdef", actual);
+  actual = bas_add_str_str("abc", "def");
+  assert_equals_str_str("abcdef", actual);
   free(actual);
 
-  actual = add_Str_Str("Hello, ", "world!");
-  assert_equals_Str_Str("Hello, world!", actual);
+  actual = bas_add_str_str("Hello, ", "world!");
+  assert_equals_str_str("Hello, world!", actual);
   free(actual);
 
-  actual = add_Str_Str("123", "456");
-  assert_equals_Str_Str("123456", actual);
+  actual = bas_add_str_str("123", "456");
+  assert_equals_str_str("123456", actual);
   free(actual);
 
-  actual = add_Str_Str("The quick brown fox ", "jumps over the lazy dog");
-  assert_equals_Str_Str("The quick brown fox jumps over the lazy dog", actual);
+  actual = bas_add_str_str("The quick brown fox ", "jumps over the lazy dog");
+  assert_equals_str_str("The quick brown fox jumps over the lazy dog", actual);
   free(actual);
 }

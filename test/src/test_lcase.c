@@ -24,37 +24,37 @@ int main(int argc, char *argv[]) {
   char* actual;
 
   // Test with empty string
-  actual = lcase$("");
-  assert_equals_Str_Str("", actual);
+  actual = bas_lcase_str("");
+  assert_equals_str_str("", actual);
   free(actual);
 
   // Test with lowercase string
-  actual = lcase$("hello");
-  assert_equals_Str_Str("hello", actual);
+  actual = bas_lcase_str("hello");
+  assert_equals_str_str("hello", actual);
   free(actual);
 
   // Test with uppercase string
-  actual = lcase$("HELLO");
-  assert_equals_Str_Str("hello", actual);
+  actual = bas_lcase_str("HELLO");
+  assert_equals_str_str("hello", actual);
   free(actual);
 
   // Test with mixed case string
-  actual = lcase$("Hello World");
-  assert_equals_Str_Str("hello world", actual);
+  actual = bas_lcase_str("Hello World");
+  assert_equals_str_str("hello world", actual);
   free(actual);
 
   // Test with numbers and symbols
-  actual = lcase$("ABC123xyz!@#");
-  assert_equals_Str_Str("abc123xyz!@#", actual);
+  actual = bas_lcase_str("ABC123xyz!@#");
+  assert_equals_str_str("abc123xyz!@#", actual);
   free(actual);
 
   // Test with all uppercase
-  actual = lcase$("QUICKBASIC");
-  assert_equals_Str_Str("quickbasic", actual);
+  actual = bas_lcase_str("QUICKBASIC");
+  assert_equals_str_str("quickbasic", actual);
   free(actual);
 
   // Test with single character
-  actual = lcase$("A");
-  assert_equals_Str_Str("a", actual);
+  actual = bas_lcase_str("A");
+  assert_equals_str_str("a", actual);
   free(actual);
 }

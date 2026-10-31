@@ -21,7 +21,7 @@
 
 #include "hex.h"
 
-char* hex$(int64_t number) {
+char* bas_hex_i64(int64_t number) {
   int length = snprintf(0, 0, "%" PRIX64, number);
   char *result = (char *) malloc(length + 1);
   snprintf(result, length + 1, "%" PRIX64, number);

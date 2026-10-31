@@ -15,13 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HEX$_H_
-#define HEX$_H_
+#ifndef JCCBAS_HEX_H
+#define JCCBAS_HEX_H
 
 #include <stdint.h>
 
 // Converts a numeric expression to a hexadecimal string. This function
 // allocates memory. It is the caller's responsibility to free this memory.
-char* hex$(int64_t number);
+char* bas_hex_i64(int64_t number);
 
-#endif /* HEX$_H_ */
+#endif /* JCCBAS_HEX_H */

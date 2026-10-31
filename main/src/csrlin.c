@@ -18,7 +18,7 @@
 #include "csrlin.h"
 #include "screen_util.h"
 
-int64_t csrlin() {
+int64_t bas_csrlin() {
   int row, col;
   get_cursor_position(&row, &col);
   return (int64_t)row;

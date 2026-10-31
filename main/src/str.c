@@ -21,14 +21,14 @@
 
 #include "str.h"
 
-char* str_I64(int64_t number) {
+char* bas_str_i64(int64_t number) {
   int length = snprintf(0, 0, "% " PRId64, number);
   char *result = (char *) malloc(length + 1);
   snprintf(result, length + 1, "% " PRId64, number);
   return result;
 }
 
-char* str_F64(double number) {
+char* bas_str_f64(double number) {
   int length = snprintf(0, 0, "% f", number);
   char *result = (char *) malloc(length + 1);
   snprintf(result, length + 1, "% f", number);

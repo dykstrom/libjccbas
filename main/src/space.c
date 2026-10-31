@@ -22,7 +22,7 @@
 
 #include "space.h"
 
-char* space$(int64_t n) {
+char* bas_space_i64(int64_t n) {
   if (n < 0 || n > 32767) {
     printf("Error: Illegal function call: space$(%" PRId64 ")", n);
     exit(1);

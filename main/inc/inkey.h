@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INKEY$_H_
-#define INKEY$_H_
+#ifndef JCCBAS_INKEY_H
+#define JCCBAS_INKEY_H
 
 // Returns a one- or two-byte string containing a character read from the
 // keyboard. An empty string is returned if no character is waiting there.
@@ -25,6 +25,6 @@
 //
 // Note: The current version of this function can only handle "normal"
 // keys, not function keys, arrow keys, etc.
-char* inkey$();
+char* bas_inkey();
 
-#endif /* INKEY$_H_ */
+#endif /* JCCBAS_INKEY_H */

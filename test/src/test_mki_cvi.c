@@ -25,29 +25,29 @@
 int main(int argc, char *argv[]) {
   char* actual;
 
-  // Test mki$
-  actual = mki$(0x0);
+  // Test bas_mki_i64
+  actual = bas_mki_i64(0x0);
   assert_array_equals_char_char("\0\0\0\0\0\0\0\0", actual, 8);
   free(actual);
 
-  actual = mki$(0x61);
+  actual = bas_mki_i64(0x61);
   assert_array_equals_char_char("a\0\0\0\0\0\0\0", actual, 8);
   free(actual);
 
-  actual = mki$(0x6261);
+  actual = bas_mki_i64(0x6261);
   assert_array_equals_char_char("ab\0\0\0\0\0\0", actual, 8);
   free(actual);
 
-  // Test cvi
-  assert_equals_I64_I64(0x6261, cvi("ab\0\0\0\0\0\0"));
+  // Test bas_cvi_str
+  assert_equals_i64_i64(0x6261, bas_cvi_str("ab\0\0\0\0\0\0"));
 
   // Test converting to a string and then back again
-  randomize(timer());
+  bas_randomize_f64(bas_timer());
 
   for (int i = 0; i < 10; i++) {
     int value = rand() * rand() - rand() * rand();
-    char *s = mki$(value);
-    assert_equals_I64_I64(value, cvi(s));
+    char *s = bas_mki_i64(value);
+    assert_equals_i64_i64(value, bas_cvi_str(s));
     free(s);
   }
 }

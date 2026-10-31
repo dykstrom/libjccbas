@@ -15,13 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OCT$_H_
-#define OCT$_H_
+#ifndef JCCBAS_OCT_H
+#define JCCBAS_OCT_H
 
 #include <stdint.h>
 
 // Converts a numeric expression to an octal string. This function
 // allocates memory. It is the caller's responsibility to free this memory.
-char* oct$(int64_t number);
+char* bas_oct_i64(int64_t number);
 
-#endif /* OCT$_H_ */
+#endif /* JCCBAS_OCT_H */

@@ -25,7 +25,7 @@
 
 #include "inkey.h"
 
-char* inkey$() {
+char* bas_inkey() {
   if (_kbhit()) {
     char *result = (char *) malloc(2);
     result[0] = _getch();

@@ -2,10 +2,11 @@
 
 ## Adding a public BASIC function
 
-1. Create `main/inc/function_name.h` with the function declaration (public API).
-2. Create `main/src/function_name.c` with the implementation.
-3. Create `test/src/test_function_name.c` with unit tests using the `assert.h` macros.
-4. Run `make test` to verify.
+1. Derive the exported name from the naming scheme in [public-api.md](public-api.md), for example `bas_left_str_i64`.
+2. Create `main/inc/function_name.h` with the function declaration (public API) and a `JCCBAS_<MODULE>_H` header guard.
+3. Create `main/src/function_name.c` with the implementation.
+4. Create `test/src/test_function_name.c` with unit tests using the `assert.h` macros.
+5. Run `make test` to verify.
 
 The `Makefile` finds new `.c` files and tracks header dependencies by itself, so you do not edit it.
 
@@ -28,5 +29,5 @@ For helpers that are not part of the public BASIC API:
 
 - Integer returns use `int64_t` (matches JCC's integer type).
 - String parameters are `const char *`.
-- Test assertions are inline functions in `test/inc/assert.h`, named `assert_equals_TYPE1_TYPE2(expected, actual)`. Available variants: I64, F64, Str, Bool, plus array comparisons.
+- Test assertions are inline functions in `test/inc/assert.h`, named `assert_equals_<type1>_<type2>(expected, actual)` with lower-case type tokens. Available variants: `i32`, `i64`, `f64`, `str`, `ptr`, `bool`, plus array comparisons.
 - Version encoding: `MAJOR * 1000000 + MINOR * 1000 + PATCH` (e.g. 1.12.7 = 1012007).

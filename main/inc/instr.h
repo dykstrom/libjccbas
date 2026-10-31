@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INSTR_H_
-#define INSTR_H_
+#ifndef JCCBAS_INSTR_H
+#define JCCBAS_INSTR_H
 
 #include <stdint.h>
 
@@ -24,7 +24,7 @@
 // Returns the position (1-based) of the first occurrence, or 0 if not found.
 // If s1 is empty, returns 0.
 // If s2 is empty, returns 1.
-int64_t instr_Str_Str(const char *s1, const char *s2);
+int64_t bas_instr_str_str(const char *s1, const char *s2);
 
 // Searches for the first occurrence of s2 in s1 starting at the specified position.
 // Returns the position (1-based) of the first occurrence, or 0 if not found.
@@ -32,6 +32,6 @@ int64_t instr_Str_Str(const char *s1, const char *s2);
 // If start is greater than the length of s1, returns 0.
 // If s1 is empty, returns 0.
 // If s2 is empty, returns start (if valid).
-int64_t instr_I64_Str_Str(int64_t start, const char *s1, const char *s2);
+int64_t bas_instr_i64_str_str(int64_t start, const char *s1, const char *s2);
 
-#endif /* INSTR_H_ */
+#endif /* JCCBAS_INSTR_H */

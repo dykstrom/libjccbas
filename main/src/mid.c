@@ -61,7 +61,7 @@ static char* mid$_impl(const char* s, int64_t start, int64_t length) {
   return result;
 }
 
-char* mid$_Str_I64(const char* s, int64_t start) {
+char* bas_mid_str_i64(const char* s, int64_t start) {
   if (start < 1) {
     printf("Error: Illegal function call: mid$(\"%s\", %" PRId64 ")", s, start);
     exit(1);
@@ -70,7 +70,7 @@ char* mid$_Str_I64(const char* s, int64_t start) {
   return mid$_impl(s, start, -1);
 }
 
-char* mid$_Str_I64_I64(const char* s, int64_t start, int64_t length) {
+char* bas_mid_str_i64_i64(const char* s, int64_t start, int64_t length) {
   if (start < 1) {
     printf("Error: Illegal function call: mid$(\"%s\", %" PRId64 ", %" PRId64 ")", s, start, length);
     exit(1);

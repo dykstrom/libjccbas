@@ -56,11 +56,11 @@ static int64_t instr_impl(const char* s1, const char* s2, int64_t start) {
   return (int64_t)(found - s1) + 1;
 }
 
-int64_t instr_Str_Str(const char* s1, const char* s2) {
+int64_t bas_instr_str_str(const char* s1, const char* s2) {
   return instr_impl(s1, s2, 1);
 }
 
-int64_t instr_I64_Str_Str(int64_t start, const char* s1, const char* s2) {
+int64_t bas_instr_i64_str_str(int64_t start, const char* s1, const char* s2) {
   if (start < 1) {
     printf("Error: Illegal function call: instr(%" PRId64 ", \"%s\", \"%s\")", start, s1, s2);
     exit(1);

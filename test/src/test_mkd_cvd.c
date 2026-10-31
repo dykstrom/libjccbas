@@ -23,12 +23,12 @@
 #include "timer.h"
 
 int main(int argc, char *argv[]) {
-  randomize(timer());
+  bas_randomize_f64(bas_timer());
 
   for (int i = 0; i < 10; i++) {
-    double value = 1000.0 * rnd() * rnd() - 1000.0 * rnd() * rnd();
-    char *s = mkd$(value);
-    assert_equals_F64_F64_F64(value, cvd(s), 0.00001);
+    double value = 1000.0 * bas_rnd() * bas_rnd() - 1000.0 * bas_rnd() * bas_rnd();
+    char *s = bas_mkd_f64(value);
+    assert_equals_f64_f64_f64(value, bas_cvd_str(s), 0.00001);
     free(s);
   }
 }

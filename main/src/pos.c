@@ -18,7 +18,7 @@
 #include "pos.h"
 #include "screen_util.h"
 
-int64_t pos(int64_t dummy) {
+int64_t bas_pos_i64(int64_t dummy) {
   int row, col;
   get_cursor_position(&row, &col);
   return (int64_t)col;

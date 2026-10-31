@@ -33,42 +33,42 @@ int main(int argc, char *argv[]) {
   localtime_r(&now, &local_time);
 #endif
 
-  // Test date$()
-  char* actual = date$();
-  assert_equals_I64_I64(10, strlen(actual));
-  assert_true_Bool(actual[2] == '-');
-  assert_true_Bool(actual[5] == '-');
+  // Test bas_date()
+  char* actual = bas_date();
+  assert_equals_i64_i64(10, strlen(actual));
+  assert_true_bool(actual[2] == '-');
+  assert_true_bool(actual[5] == '-');
 
   // Parse the date string (format: MM-DD-YYYY) and verify it matches system date
   int month, day, year;
   int parsed = sscanf(actual, "%d-%d-%d", &month, &day, &year);
-  assert_equals_I64_I64(3, parsed);
+  assert_equals_i64_i64(3, parsed);
 
-  assert_equals_I64_I64(local_time.tm_mon + 1, month);
-  assert_equals_I64_I64(local_time.tm_mday, day);
-  assert_equals_I64_I64(local_time.tm_year + 1900, year);
+  assert_equals_i64_i64(local_time.tm_mon + 1, month);
+  assert_equals_i64_i64(local_time.tm_mday, day);
+  assert_equals_i64_i64(local_time.tm_year + 1900, year);
 
   free(actual);
 
-  // Test time$()
-  actual = time$();
-  assert_equals_I64_I64(8, strlen(actual));
-  assert_true_Bool(actual[2] == ':');
-  assert_true_Bool(actual[5] == ':');
+  // Test bas_time()
+  actual = bas_time();
+  assert_equals_i64_i64(8, strlen(actual));
+  assert_true_bool(actual[2] == ':');
+  assert_true_bool(actual[5] == ':');
 
   // Parse the time string (format: HH:MM:SS) and verify it matches system time
   int hour, min, sec;
   parsed = sscanf(actual, "%d:%d:%d", &hour, &min, &sec);
-  assert_equals_I64_I64(3, parsed);
+  assert_equals_i64_i64(3, parsed);
 
   // Verify the time matches the current system time (within 2 seconds tolerance)
-  // This accounts for the time between getting system time and calling time$()
+  // This accounts for the time between getting system time and calling bas_time()
   int expected_total_sec = local_time.tm_hour * 3600 + local_time.tm_min * 60 + local_time.tm_sec;
   int actual_total_sec = hour * 3600 + min * 60 + sec;
   int diff = actual_total_sec - expected_total_sec;
 
   // Allow for small time differences (up to 2 seconds)
-  assert_true_Bool(diff >= 0 && diff <= 2);
+  assert_true_bool(diff >= 0 && diff <= 2);
 
   free(actual);
 }

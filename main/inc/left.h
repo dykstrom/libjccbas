@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LEFT$_H_
-#define LEFT$_H_
+#ifndef JCCBAS_LEFT_H
+#define JCCBAS_LEFT_H
 
 #include <stdint.h>
 
@@ -25,6 +25,6 @@
 // If n is zero, an empty string is returned.
 // If n is negative, an "Illegal function call" error is raised and the program exits.
 // This function allocates memory. It is the caller's responsibility to free this memory.
-char *left$(const char *s, int64_t n);
+char *bas_left_str_i64(const char *s, int64_t n);
 
-#endif /* LEFT$_H_ */
+#endif /* JCCBAS_LEFT_H */

@@ -21,7 +21,7 @@
 
 #include "lcase.h"
 
-char* lcase$(const char* s) {
+char* bas_lcase_str(const char* s) {
   size_t len = strlen(s);
   char* result = malloc(len + 1);
 

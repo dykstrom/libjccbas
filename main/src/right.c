@@ -22,7 +22,7 @@
 
 #include "right.h"
 
-char* right$(const char* s, int64_t n) {
+char* bas_right_str_i64(const char* s, int64_t n) {
   if (n < 0) {
     printf("Error: Illegal function call: right$(\"%s\", %" PRId64 ")", s, n);
     exit(1);

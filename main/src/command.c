@@ -30,7 +30,7 @@
 static char *cached_command_line = NULL;
 
 // This function should be called by the main program to initialize the command line
-void init_command_line(int argc, char *argv[]) {
+void bas_init_command_line(int argc, char *argv[]) {
   if (cached_command_line != NULL) {
     return; // Already initialized
   }
@@ -63,14 +63,14 @@ void init_command_line(int argc, char *argv[]) {
 }
 #endif
 
-char *command$() {
+char *bas_command() {
 #ifdef _WIN32
   const char *cmd = GetCommandLineA();
   char *result = malloc(strlen(cmd) + 1);
   return strcpy(result, cmd);
 #else
   // On Unix-like systems, return the cached command line
-  // Assumes init_command_line has been called
+  // Assumes bas_init_command_line has been called
   if (cached_command_line == NULL) {
     cached_command_line = malloc(1);
     cached_command_line[0] = '\0';

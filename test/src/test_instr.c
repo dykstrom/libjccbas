@@ -19,90 +19,90 @@
 #include "instr.h"
 
 int main(int argc, char *argv[]) {
-  // Test instr_Str_Str - two argument version (search from position 1)
+  // Test bas_instr_str_str - two argument version (search from position 1)
 
   // Test finding substring at the beginning
-  assert_equals_I64_I64(1, instr_Str_Str("hello world", "hello"));
+  assert_equals_i64_i64(1, bas_instr_str_str("hello world", "hello"));
 
   // Test finding substring in the middle
-  assert_equals_I64_I64(7, instr_Str_Str("hello world", "world"));
+  assert_equals_i64_i64(7, bas_instr_str_str("hello world", "world"));
 
   // Test finding substring at the end
-  assert_equals_I64_I64(9, instr_Str_Str("QuickBASIC", "IC"));
+  assert_equals_i64_i64(9, bas_instr_str_str("QuickBASIC", "IC"));
 
   // Test finding single character
-  assert_equals_I64_I64(5, instr_Str_Str("hello", "o"));
+  assert_equals_i64_i64(5, bas_instr_str_str("hello", "o"));
 
   // Test substring not found
-  assert_equals_I64_I64(0, instr_Str_Str("hello", "xyz"));
+  assert_equals_i64_i64(0, bas_instr_str_str("hello", "xyz"));
 
   // Test with empty string1
-  assert_equals_I64_I64(0, instr_Str_Str("", "hello"));
+  assert_equals_i64_i64(0, bas_instr_str_str("", "hello"));
 
   // Test with empty string2 (should return 1)
-  assert_equals_I64_I64(1, instr_Str_Str("hello", ""));
+  assert_equals_i64_i64(1, bas_instr_str_str("hello", ""));
 
   // Test with both strings empty
-  assert_equals_I64_I64(1, instr_Str_Str("", ""));
+  assert_equals_i64_i64(1, bas_instr_str_str("", ""));
 
   // Test finding first occurrence when multiple exist
-  assert_equals_I64_I64(2, instr_Str_Str("banana", "a"));
+  assert_equals_i64_i64(2, bas_instr_str_str("banana", "a"));
 
   // Test case sensitivity
-  assert_equals_I64_I64(0, instr_Str_Str("Hello", "hello"));
+  assert_equals_i64_i64(0, bas_instr_str_str("Hello", "hello"));
 
   // Test longer string2 than string1
-  assert_equals_I64_I64(0, instr_Str_Str("hi", "hello"));
+  assert_equals_i64_i64(0, bas_instr_str_str("hi", "hello"));
 
   // Test identical strings
-  assert_equals_I64_I64(1, instr_Str_Str("test", "test"));
+  assert_equals_i64_i64(1, bas_instr_str_str("test", "test"));
 
-  // Test instr_I64_Str_Str - three argument version (search from specified position)
+  // Test bas_instr_i64_str_str - three argument version (search from specified position)
 
   // Test starting at position 1 (should match two-arg version)
-  assert_equals_I64_I64(7, instr_I64_Str_Str(1, "hello world", "world"));
+  assert_equals_i64_i64(7, bas_instr_i64_str_str(1, "hello world", "world"));
 
   // Test starting at position 2
-  assert_equals_I64_I64(2, instr_I64_Str_Str(2, "banana", "a"));
+  assert_equals_i64_i64(2, bas_instr_i64_str_str(2, "banana", "a"));
 
   // Test starting after first occurrence to find second
-  assert_equals_I64_I64(4, instr_I64_Str_Str(3, "banana", "a"));
+  assert_equals_i64_i64(4, bas_instr_i64_str_str(3, "banana", "a"));
 
   // Test starting after second occurrence to find third
-  assert_equals_I64_I64(6, instr_I64_Str_Str(5, "banana", "a"));
+  assert_equals_i64_i64(6, bas_instr_i64_str_str(5, "banana", "a"));
 
   // Test starting beyond string length
-  assert_equals_I64_I64(0, instr_I64_Str_Str(20, "hello", "o"));
+  assert_equals_i64_i64(0, bas_instr_i64_str_str(20, "hello", "o"));
 
   // Test starting at last character
-  assert_equals_I64_I64(5, instr_I64_Str_Str(5, "hello", "o"));
+  assert_equals_i64_i64(5, bas_instr_i64_str_str(5, "hello", "o"));
 
   // Test starting at exact position where substring exists
-  assert_equals_I64_I64(7, instr_I64_Str_Str(7, "hello world", "world"));
+  assert_equals_i64_i64(7, bas_instr_i64_str_str(7, "hello world", "world"));
 
   // Test starting just after substring position
-  assert_equals_I64_I64(0, instr_I64_Str_Str(8, "hello world", "world"));
+  assert_equals_i64_i64(0, bas_instr_i64_str_str(8, "hello world", "world"));
 
   // Test with empty string2 and valid start position
-  assert_equals_I64_I64(3, instr_I64_Str_Str(3, "hello", ""));
+  assert_equals_i64_i64(3, bas_instr_i64_str_str(3, "hello", ""));
 
   // Test with empty string1
-  assert_equals_I64_I64(0, instr_I64_Str_Str(1, "", "test"));
+  assert_equals_i64_i64(0, bas_instr_i64_str_str(1, "", "test"));
 
   // Test with both strings empty
-  assert_equals_I64_I64(1, instr_I64_Str_Str(1, "", ""));
+  assert_equals_i64_i64(1, bas_instr_i64_str_str(1, "", ""));
 
   // Test finding substring when start position is in the middle
-  assert_equals_I64_I64(9, instr_I64_Str_Str(5, "QuickBASIC", "IC"));
+  assert_equals_i64_i64(9, bas_instr_i64_str_str(5, "QuickBASIC", "IC"));
 
   // Test not finding substring when start position is after its location
-  assert_equals_I64_I64(0, instr_I64_Str_Str(2, "hello world", "hello"));
+  assert_equals_i64_i64(0, bas_instr_i64_str_str(2, "hello world", "hello"));
 
   // Test with start at string length
-  assert_equals_I64_I64(0, instr_I64_Str_Str(5, "hello", "lo"));
+  assert_equals_i64_i64(0, bas_instr_i64_str_str(5, "hello", "lo"));
 
   // Test with start at string length and single char match
-  assert_equals_I64_I64(11, instr_I64_Str_Str(11, "hello world", "d"));
+  assert_equals_i64_i64(11, bas_instr_i64_str_str(11, "hello world", "d"));
 
   return 0;
 }

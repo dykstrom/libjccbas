@@ -23,23 +23,23 @@
 int main(int argc, char *argv[]) {
   char* actual;
 
-  actual = oct$(0);
-  assert_equals_Str_Str("0", actual);
+  actual = bas_oct_i64(0);
+  assert_equals_str_str("0", actual);
   free(actual);
 
-  actual = oct$(10);
-  assert_equals_Str_Str("12", actual);
+  actual = bas_oct_i64(10);
+  assert_equals_str_str("12", actual);
   free(actual);
 
-  actual = oct$(255);
-  assert_equals_Str_Str("377", actual);
+  actual = bas_oct_i64(255);
+  assert_equals_str_str("377", actual);
   free(actual);
 
-  actual = oct$(-1);
-  assert_equals_Str_Str("1777777777777777777777", actual);
+  actual = bas_oct_i64(-1);
+  assert_equals_str_str("1777777777777777777777", actual);
   free(actual);
 
-  actual = oct$(123456789);
-  assert_equals_Str_Str("726746425", actual);
+  actual = bas_oct_i64(123456789);
+  assert_equals_str_str("726746425", actual);
   free(actual);
 }

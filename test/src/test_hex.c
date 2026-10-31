@@ -23,23 +23,23 @@
 int main(int argc, char *argv[]) {
   char* actual;
 
-  actual = hex$(0);
-  assert_equals_Str_Str("0", actual);
+  actual = bas_hex_i64(0);
+  assert_equals_str_str("0", actual);
   free(actual);
 
-  actual = hex$(10);
-  assert_equals_Str_Str("A", actual);
+  actual = bas_hex_i64(10);
+  assert_equals_str_str("A", actual);
   free(actual);
 
-  actual = hex$(255);
-  assert_equals_Str_Str("FF", actual);
+  actual = bas_hex_i64(255);
+  assert_equals_str_str("FF", actual);
   free(actual);
 
-  actual = hex$(-1);
-  assert_equals_Str_Str("FFFFFFFFFFFFFFFF", actual);
+  actual = bas_hex_i64(-1);
+  assert_equals_str_str("FFFFFFFFFFFFFFFF", actual);
   free(actual);
 
-  actual = hex$(123456789);
-  assert_equals_Str_Str("75BCD15", actual);
+  actual = bas_hex_i64(123456789);
+  assert_equals_str_str("75BCD15", actual);
   free(actual);
 }

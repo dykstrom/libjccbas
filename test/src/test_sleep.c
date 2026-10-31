@@ -24,7 +24,7 @@
 
 int main(int argc, char *argv[]) {
   // Skip test if stdin is not a terminal (e.g., in CI/automation environments)
-  // because sleep_F64 checks for keyboard input which requires a terminal
+  // because bas_sleep_f64 checks for keyboard input which requires a terminal
   if (!isatty(STDIN_FILENO)) {
     printf("Skipping test_sleep: stdin is not a terminal\n");
     return 0;
@@ -32,15 +32,15 @@ int main(int argc, char *argv[]) {
 
   double start, stop;
 
-  start = timer();
-  sleep_F64(0.1);
-  stop = timer();
-  assert_true_Bool(stop - start >= 0.1);
-  assert_true_Bool(stop - start < 0.2);
+  start = bas_timer();
+  bas_sleep_f64(0.1);
+  stop = bas_timer();
+  assert_true_bool(stop - start >= 0.1);
+  assert_true_bool(stop - start < 0.2);
 
-  start = timer();
-  sleep_F64(0.5);
-  stop = timer();
-  assert_true_Bool(stop - start >= 0.5);
-  assert_true_Bool(stop - start < 0.6);
+  start = bas_timer();
+  bas_sleep_f64(0.5);
+  stop = bas_timer();
+  assert_true_bool(stop - start >= 0.5);
+  assert_true_bool(stop - start < 0.6);
 }

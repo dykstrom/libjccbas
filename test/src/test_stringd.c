@@ -24,27 +24,27 @@ int main(int argc, char *argv[])
 {
   char *actual;
 
-  actual = string$_I64(0, 45);
-  assert_equals_Str_Str("", actual);
+  actual = bas_string_i64_i64(0, 45);
+  assert_equals_str_str("", actual);
   free(actual);
 
-  actual = string$_I64(3, 97);
-  assert_equals_Str_Str("aaa", actual);
+  actual = bas_string_i64_i64(3, 97);
+  assert_equals_str_str("aaa", actual);
   free(actual);
 
-  actual = string$_I64(7, 48);
-  assert_equals_Str_Str("0000000", actual);
+  actual = bas_string_i64_i64(7, 48);
+  assert_equals_str_str("0000000", actual);
   free(actual);
 
-  actual = string$_Str(0, "abc");
-  assert_equals_Str_Str("", actual);
+  actual = bas_string_i64_str(0, "abc");
+  assert_equals_str_str("", actual);
   free(actual);
 
-  actual = string$_Str(2, "abc");
-  assert_equals_Str_Str("aa", actual);
+  actual = bas_string_i64_str(2, "abc");
+  assert_equals_str_str("aa", actual);
   free(actual);
 
-  actual = string$_Str(5, " ");
-  assert_equals_Str_Str("     ", actual);
+  actual = bas_string_i64_str(5, " ");
+  assert_equals_str_str("     ", actual);
   free(actual);
 }
