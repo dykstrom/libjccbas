@@ -30,4 +30,3 @@ For helpers that are not part of the public BASIC API:
 - Integer returns use `int64_t` (matches JCC's integer type).
 - String parameters are `const char *`.
 - Test assertions are inline functions in `test/inc/assert.h`, named `assert_equals_<type1>_<type2>(expected, actual)` with lower-case type tokens. Available variants: `i32`, `i64`, `f64`, `str`, `ptr`, `bool`, plus array comparisons.
-- Version encoding: `MAJOR * 1000000 + MINOR * 1000 + PATCH` (e.g. 1.12.7 = 1012007).

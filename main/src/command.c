@@ -15,69 +15,65 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef _WIN32
-#include <processenv.h>
-#endif
-
 #include "command.h"
 
-#ifndef _WIN32
-// Static storage for command line on Unix-like systems
+// The command line returned by bas_command, or NULL if not initialized
 static char *cached_command_line = NULL;
 
-// This function should be called by the main program to initialize the command line
-void bas_init_command_line(int argc, char *argv[]) {
-  if (cached_command_line != NULL) {
-    return; // Already initialized
-  }
+static char *empty_string() {
+  char *result = malloc(1);
+  result[0] = '\0';
+  return result;
+}
 
-  if (argc == 0 || argv == NULL) {
-    cached_command_line = malloc(1);
-    cached_command_line[0] = '\0';
+void bas_init_command_line(int argc, char *argv[]) {
+  free(cached_command_line);
+
+  if (argc <= 1 || argv == NULL) {
+    cached_command_line = empty_string();
     return;
   }
 
-  // Calculate total length needed
+  // Skip argv[0], the program name, like QuickBASIC does
   size_t total_len = 0;
-  for (int i = 0; i < argc; i++) {
-    total_len += strlen(argv[i]);
-    if (i < argc - 1) {
-      total_len++; // Space between arguments
-    }
+  for (int i = 1; i < argc; i++) {
+    total_len += strlen(argv[i]) + 1; // Argument plus a space or the terminator
   }
 
-  // Allocate and build the command line string
-  cached_command_line = malloc(total_len + 1);
-  cached_command_line[0] = '\0';
-
-  for (int i = 0; i < argc; i++) {
-    strcat(cached_command_line, argv[i]);
-    if (i < argc - 1) {
-      strcat(cached_command_line, " ");
+  char *line = malloc(total_len);
+  char *p = line;
+  for (int i = 1; i < argc; i++) {
+    if (i > 1) {
+      *p++ = ' ';
     }
+    size_t len = strlen(argv[i]);
+    memcpy(p, argv[i], len);
+    p += len;
   }
+  *p = '\0';
+
+  // QuickBASIC converts all letters to upper case
+  for (p = line; *p != '\0'; p++) {
+    *p = (char) toupper((unsigned char) *p);
+  }
+
+  // QuickBASIC removes all leading blanks
+  size_t skip = strspn(line, " \t");
+  if (skip > 0) {
+    memmove(line, line + skip, strlen(line + skip) + 1);
+  }
+
+  cached_command_line = line;
 }
-#endif
 
 char *bas_command() {
-#ifdef _WIN32
-  const char *cmd = GetCommandLineA();
-  char *result = malloc(strlen(cmd) + 1);
-  return strcpy(result, cmd);
-#else
-  // On Unix-like systems, return the cached command line
-  // Assumes bas_init_command_line has been called
   if (cached_command_line == NULL) {
-    cached_command_line = malloc(1);
-    cached_command_line[0] = '\0';
+    return empty_string();
   }
-
-  // Return a copy of the cached command line
   char *result = malloc(strlen(cached_command_line) + 1);
   return strcpy(result, cached_command_line);
-#endif
 }
