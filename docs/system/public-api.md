@@ -77,8 +77,6 @@ the alternatives.
   `get_cursor_position` from `screen_util`. On Windows only
   `get_cursor_position` is exported. User C code that defines one of these
   names can collide with libjccbas at link time.
-- `bas_init_command_line` exists only on macOS and Linux. On Windows,
-  `bas_command` reads the command line with `GetCommandLineA()`.
 - The test assertions in `test/inc/assert.h` use the same lower-case type
   tokens, for example `assert_equals_i64_i64` and `assert_equals_str_str`.
 

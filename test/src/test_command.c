@@ -21,18 +21,59 @@
 #include "assert.h"
 #include "command.h"
 
-int main(int argc, char *argv[])
-{
-  char *actual;
+#define ARGC(argv) ((int) (sizeof(argv) / sizeof(argv[0])))
 
-#ifndef _WIN32
-  // Initialize command line on Unix-like systems
-  bas_init_command_line(argc, argv);
-#endif
-
-  actual = bas_command();
-
-  assert_true_bool(strstr(actual, "test_command") != 0);
-
+static void assert_command(const char *expected) {
+  char *actual = bas_command();
+  assert_equals_str_str(expected, actual);
   free(actual);
+}
+
+int main() {
+  // Init never called
+  assert_command("");
+
+  // Program name only
+  char *only_program[] = {"prog"};
+  bas_init_command_line(ARGC(only_program), only_program);
+  assert_command("");
+
+  // No argv at all
+  bas_init_command_line(0, NULL);
+  assert_command("");
+
+  // Program name dropped, letters in upper case
+  char *mixed_case[] = {"/path/PROG.exe", "foo", "Bar"};
+  bas_init_command_line(ARGC(mixed_case), mixed_case);
+  assert_command("FOO BAR");
+
+  // Leading spaces and tabs removed
+  char *leading_blanks[] = {"prog", " \t foo", "bar"};
+  bas_init_command_line(ARGC(leading_blanks), leading_blanks);
+  assert_command("FOO BAR");
+
+  // Inner and trailing blanks kept
+  char *inner_trailing_blanks[] = {"prog", "a  ", "b "};
+  bas_init_command_line(ARGC(inner_trailing_blanks), inner_trailing_blanks);
+  assert_command("A   B ");
+
+  // Non-ASCII bytes unchanged
+  char *non_ascii[] = {"prog", "a\xc3\xa5"};
+  bas_init_command_line(ARGC(non_ascii), non_ascii);
+  assert_command("A\xc3\xa5");
+
+  // A later call replaces the line
+  char *first[] = {"prog", "one"};
+  char *second[] = {"prog", "two"};
+  bas_init_command_line(ARGC(first), first);
+  bas_init_command_line(ARGC(second), second);
+  assert_command("TWO");
+
+  // Each call returns a new copy
+  char *copy1 = bas_command();
+  char *copy2 = bas_command();
+  assert_true_bool(copy1 != copy2);
+  free(copy1);
+  assert_equals_str_str("TWO", copy2);
+  free(copy2);
 }
