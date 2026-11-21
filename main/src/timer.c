@@ -20,7 +20,7 @@
 #include "timer.h"
 #include "time_util.h"
 
-double timer() {
+double bas_timer() {
   struct tm t;
   unsigned millis = _getsystime(&t);
   return t.tm_hour * 60 * 60 + t.tm_min * 60 + t.tm_sec + millis / 1000.0;

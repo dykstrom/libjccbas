@@ -15,12 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CSRLIN_H_
-#define CSRLIN_H_
+#ifndef JCCBAS_CSRLIN_H
+#define JCCBAS_CSRLIN_H
 
 #include <stdint.h>
 
 // Returns the current row position of the cursor (1-based).
-int64_t csrlin();
+int64_t bas_csrlin();
 
-#endif /* CSRLIN_H_ */
+#endif /* JCCBAS_CSRLIN_H */

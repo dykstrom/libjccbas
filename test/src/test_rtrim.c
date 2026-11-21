@@ -23,31 +23,31 @@
 int main(int argc, char *argv[]) {
   char* actual;
 
-  actual = rtrim$("");
-  assert_equals_Str_Str("", actual);
+  actual = bas_rtrim_str("");
+  assert_equals_str_str("", actual);
   free(actual);
 
-  actual = rtrim$(" \t\n ");
-  assert_equals_Str_Str("", actual);
+  actual = bas_rtrim_str(" \t\n ");
+  assert_equals_str_str("", actual);
   free(actual);
 
-  actual = rtrim$("abc");
-  assert_equals_Str_Str("abc", actual);
+  actual = bas_rtrim_str("abc");
+  assert_equals_str_str("abc", actual);
   free(actual);
 
-  actual = rtrim$("abc ");
-  assert_equals_Str_Str("abc", actual);
+  actual = bas_rtrim_str("abc ");
+  assert_equals_str_str("abc", actual);
   free(actual);
 
-  actual = rtrim$("abc     ");
-  assert_equals_Str_Str("abc", actual);
+  actual = bas_rtrim_str("abc     ");
+  assert_equals_str_str("abc", actual);
   free(actual);
 
-  actual = rtrim$("abc\t\n");
-  assert_equals_Str_Str("abc", actual);
+  actual = bas_rtrim_str("abc\t\n");
+  assert_equals_str_str("abc", actual);
   free(actual);
 
-  actual = rtrim$("   abc");
-  assert_equals_Str_Str("   abc", actual);
+  actual = bas_rtrim_str("   abc");
+  assert_equals_str_str("   abc", actual);
   free(actual);
 }

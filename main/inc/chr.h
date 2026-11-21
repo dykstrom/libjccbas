@@ -15,13 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CHR$_H_
-#define CHR$_H_
+#ifndef JCCBAS_CHR_H
+#define JCCBAS_CHR_H
 
 #include <stdint.h>
 
 // Returns a one-character string whose ASCII code is the argument. This function
 // allocates memory. It is the caller's responsibility to free this memory.
-char *chr$(int64_t code);
+char *bas_chr_i64(int64_t code);
 
-#endif /* CHR$_H_ */
+#endif /* JCCBAS_CHR_H */

@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MID$_H_
-#define MID$_H_
+#ifndef JCCBAS_MID_H
+#define JCCBAS_MID_H
 
 #include <stdint.h>
 
@@ -24,7 +24,7 @@
 // If start is greater than the length of the string, an empty string is returned.
 // If start is less than 1, an "Illegal function call" error is raised and the program exits.
 // This function allocates memory. It is the caller's responsibility to free this memory.
-char *mid$_Str_I64(const char *s, int64_t start);
+char *bas_mid_str_i64(const char *s, int64_t start);
 
 // Returns a substring of the given string starting at the specified position (1-based)
 // with the specified length.
@@ -34,6 +34,6 @@ char *mid$_Str_I64(const char *s, int64_t start);
 // If length is zero, an empty string is returned.
 // If start + length exceeds the string length, returns from start to end of string.
 // This function allocates memory. It is the caller's responsibility to free this memory.
-char *mid$_Str_I64_I64(const char *s, int64_t start, int64_t length);
+char *bas_mid_str_i64_i64(const char *s, int64_t start, int64_t length);
 
-#endif /* MID$_H_ */
+#endif /* JCCBAS_MID_H */

@@ -15,18 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef STRING$_H_
-#define STRING$_H_
+#ifndef JCCBAS_STRINGD_H
+#define JCCBAS_STRINGD_H
 
 #include <stdint.h>
 
 // Returns a string whose characters all have a given ASCII code. This function
 // allocates memory. It is the caller's responsibility to free this memory.
-char *string$_I64(int64_t len, int64_t code);
+char *bas_string_i64_i64(int64_t len, int64_t code);
 
 // Returns a string whose characters are all the first character of a string
 // expression. This function allocates memory. It is the caller's responsibility
 // to free this memory.
-char *string$_Str(int64_t len, const char *s);
+char *bas_string_i64_str(int64_t len, const char *s);
 
-#endif /* STRING$_H_ */
+#endif /* JCCBAS_STRINGD_H */

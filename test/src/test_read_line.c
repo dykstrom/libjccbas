@@ -25,10 +25,10 @@ void should_read_line(const char* input, const char* expected) {
         exit(1);
     }
     
-    char* line = read_line();
+    char* line = bas_read_line();
     
     assert_not_null(line);
-    assert_equals_Str_Str(expected, line);
+    assert_equals_str_str(expected, line);
     
     free(line);
     

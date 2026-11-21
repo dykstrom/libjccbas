@@ -15,22 +15,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RANDOMIZE_RND_H_
-#define RANDOMIZE_RND_H_
+#ifndef JCCBAS_RANDOMIZE_RND_H
+#define JCCBAS_RANDOMIZE_RND_H
 
-// Reseeds the random number generator.
-void randomize(double seed);
+// The random number generator uses the same algorithm as QuickBASIC 4.5,
+// and returns the same sequence of numbers for the same seeds.
+
+// Reseeds the random number generator. Like in QuickBASIC 4.5, the low
+// byte of the old seed is kept, so calling bas_randomize_f64 twice with the same
+// seed does not restart the sequence. To restart a sequence, call
+// bas_rnd_f64 with a negative number before calling bas_randomize_f64.
+void bas_randomize_f64(double seed);
 
 // Returns the next pseudo-random number in the sequence.
-double rnd();
+double bas_rnd();
 
 // Returns the next pseudo-random number in the sequence, after possibly
 // reseeding the random number generator. Depending on the specified seed,
 // the following can happen:
 //   seed < 0.0   reseeds the random number generator, and returns the
-//                next pseudo-random number in the sequence
+//                next pseudo-random number in the sequence; the same
+//                seed always returns the same number
 //   seed = 0.0   returns the last number generated
 //   seed > 0.0   returns the next pseudo-random number in the sequence
-double rnd_F64(double seed);
+double bas_rnd_f64(double seed);
 
-#endif /* RANDOMIZE_RND_H_ */
+#endif /* JCCBAS_RANDOMIZE_RND_H */

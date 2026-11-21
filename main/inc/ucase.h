@@ -15,11 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef UCASE$_H_
-#define UCASE$_H_
+#ifndef JCCBAS_UCASE_H
+#define JCCBAS_UCASE_H
 
 // Converts a string to uppercase. This function allocates memory.
 // It is the caller's responsibility to free this memory.
-char *ucase$(const char *s);
+char *bas_ucase_str(const char *s);
 
-#endif /* UCASE$_H_ */
+#endif /* JCCBAS_UCASE_H */

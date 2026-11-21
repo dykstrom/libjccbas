@@ -15,12 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LTRIM$_H_
-#define LTRIM$_H_
+#ifndef JCCBAS_LTRIM_H
+#define JCCBAS_LTRIM_H
 
 // Returns a copy of the given string, with leading whitespace removed.
 // This function allocates memory. It is the caller's responsibility to
 // free this memory.
-char* ltrim$(const char* s);
+char* bas_ltrim_str(const char* s);
 
-#endif /* LTRIM$_H_ */
+#endif /* JCCBAS_LTRIM_H */

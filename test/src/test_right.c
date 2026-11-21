@@ -24,37 +24,37 @@ int main(int argc, char *argv[]) {
   char* actual;
 
   // Test with empty string
-  actual = right$("", 5);
-  assert_equals_Str_Str("", actual);
+  actual = bas_right_str_i64("", 5);
+  assert_equals_str_str("", actual);
   free(actual);
 
   // Test with zero length
-  actual = right$("hello", 0);
-  assert_equals_Str_Str("", actual);
+  actual = bas_right_str_i64("hello", 0);
+  assert_equals_str_str("", actual);
   free(actual);
 
   // Test normal case - right 3 characters
-  actual = right$("hello", 3);
-  assert_equals_Str_Str("llo", actual);
+  actual = bas_right_str_i64("hello", 3);
+  assert_equals_str_str("llo", actual);
   free(actual);
 
   // Test when n equals string length
-  actual = right$("hello", 5);
-  assert_equals_Str_Str("hello", actual);
+  actual = bas_right_str_i64("hello", 5);
+  assert_equals_str_str("hello", actual);
   free(actual);
 
   // Test when n exceeds string length
-  actual = right$("hello", 10);
-  assert_equals_Str_Str("hello", actual);
+  actual = bas_right_str_i64("hello", 10);
+  assert_equals_str_str("hello", actual);
   free(actual);
 
   // Test with single character
-  actual = right$("hello", 1);
-  assert_equals_Str_Str("o", actual);
+  actual = bas_right_str_i64("hello", 1);
+  assert_equals_str_str("o", actual);
   free(actual);
 
   // Test with longer string
-  actual = right$("QuickBASIC", 5);
-  assert_equals_Str_Str("BASIC", actual);
+  actual = bas_right_str_i64("QuickBASIC", 5);
+  assert_equals_str_str("BASIC", actual);
   free(actual);
 }

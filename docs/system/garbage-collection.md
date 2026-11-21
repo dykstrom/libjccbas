@@ -98,10 +98,12 @@ The GC takes ownership at `jcc_gc_register(p)` and later `free()`s `p`, so every
 static buffer or string literal would later `free()` non-heap memory. All 23
 exports were audited and **every one already returns a fresh `malloc`'d block**:
 
-`add_Str_Str`, `chr$`, `command$`, `date$`, `time$`, `hex$`, `inkey$`, `lcase$`,
-`left$`, `ltrim$`, `mid$_Str_I64`, `mid$_Str_I64_I64`, `oct$`, `right$`, `rtrim$`,
-`space$`, `str_I64`, `str_F64`, `string$_I64`, `string$_Str`, `ucase$`, `mkd$`,
-`mki$`.
+`bas_add_str_str`, `bas_chr_i64`, `bas_command`, `bas_date`, `bas_time`,
+`bas_hex_i64`, `bas_inkey`, `bas_lcase_str`, `bas_left_str_i64`,
+`bas_ltrim_str`, `bas_mid_str_i64`, `bas_mid_str_i64_i64`, `bas_oct_i64`,
+`bas_right_str_i64`, `bas_rtrim_str`, `bas_space_i64`, `bas_str_i64`,
+`bas_str_f64`, `bas_string_i64_i64`, `bas_string_i64_str`, `bas_ucase_str`,
+`bas_mkd_f64`, `bas_mki_i64`.
 
-Notably `command$` returns a `malloc`'d **copy** of its cached command line, not
+Notably `bas_command` returns a `malloc`'d **copy** of its cached command line, not
 the cache itself. No offenders were found, so no code changes were needed.

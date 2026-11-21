@@ -20,7 +20,7 @@
 
 #include "read_line.h"
 
-char* read_line(void) {
+char* bas_read_line(void) {
   int length = 0;
   int size = 64;
   char* buffer = malloc(size);

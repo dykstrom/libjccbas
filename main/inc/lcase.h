@@ -15,11 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LCASE$_H_
-#define LCASE$_H_
+#ifndef JCCBAS_LCASE_H
+#define JCCBAS_LCASE_H
 
 // Converts a string to lowercase. This function allocates memory.
 // It is the caller's responsibility to free this memory.
-char *lcase$(const char *s);
+char *bas_lcase_str(const char *s);
 
-#endif /* LCASE$_H_ */
+#endif /* JCCBAS_LCASE_H */

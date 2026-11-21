@@ -22,7 +22,7 @@
 #include "date_time.h"
 #include "time_util.h"
 
-char* date$() {
+char* bas_date() {
   struct tm t;
   _getsystime(&t);
 
@@ -32,7 +32,7 @@ char* date$() {
   return result;
 }
 
-char* time$() {
+char* bas_time() {
   struct tm t;
   _getsystime(&t);
 

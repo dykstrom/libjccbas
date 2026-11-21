@@ -21,7 +21,7 @@
 
 #include "chr.h"
 
-char* chr$(int64_t code) {
+char* bas_chr_i64(int64_t code) {
   if (code < 0 || code > 255) {
     printf("Error: Illegal function call: chr$(%" PRId64 ")", code);
     exit(1);

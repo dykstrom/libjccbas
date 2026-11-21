@@ -20,7 +20,7 @@
 
 #include "add.h"
 
-char* add_Str_Str(const char* s1, const char* s2) {
+char* bas_add_str_str(const char* s1, const char* s2) {
   size_t len1 = strlen(s1);
   size_t len2 = strlen(s2);
 

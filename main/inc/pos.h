@@ -15,13 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef POS_H_
-#define POS_H_
+#ifndef JCCBAS_POS_H
+#define JCCBAS_POS_H
 
 #include <stdint.h>
 
 // Returns the current column position of the cursor (1-based).
 // The dummy parameter is ignored and exists for QB compatibility.
-int64_t pos(int64_t dummy);
+int64_t bas_pos_i64(int64_t dummy);
 
-#endif /* POS_H_ */
+#endif /* JCCBAS_POS_H */

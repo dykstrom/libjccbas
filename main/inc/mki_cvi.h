@@ -15,21 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MKI$_CVI_H_
-#define MKI$_CVI_H_
+#ifndef JCCBAS_MKI_CVI_H
+#define JCCBAS_MKI_CVI_H
 
 #include <stdint.h>
 
 // Converts an integer to a two-byte (actually eight-byte) string.
 // Note that the returned string may contain null characters. For
-// example, the call mki$(0) will return a string that contains
+// example, the call bas_mki_i64(0) will return a string that contains
 // eight null characters, followed by the ending null character.
 // This function allocates memory. It is the caller's responsibility
 // to free this memory.
-char* mki$(int64_t number);
+char* bas_mki_i64(int64_t number);
 
 // Convert a string containing a numeric value to an integer.
-// This function is the inverse of mki$.
-int64_t cvi(const char* s);
+// This function is the inverse of bas_mki_i64.
+int64_t bas_cvi_str(const char* s);
 
-#endif /* MKI$_CVI_H_ */
+#endif /* JCCBAS_MKI_CVI_H */

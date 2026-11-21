@@ -21,7 +21,7 @@ mvn release:prepare
 The release process consists of two parts:
 
 1. **Maven Release Plugin**: Automates version updates, Git commits, and tag creation
-2. **GitHub Actions**: Automatically builds on all platforms (Windows/macOS/Linux x86_64, macOS/Linux ARM64), runs tests, and creates GitHub Releases with artifacts
+2. **GitHub Actions**: Automatically builds on all platforms (Windows/macOS/Linux x86_64, Windows/macOS/Linux ARM64), runs tests, and creates GitHub Releases with artifacts
 
 When you run `mvn release:prepare`, it automatically:
 - Updates `pom.xml` to release version (removes `-SNAPSHOT`)
@@ -54,7 +54,7 @@ Before releasing, ensure:
 
 4. **Tests pass locally**: Run the test suite
    ```bash
-   ./run_all_tests.sh
+   make test
    ```
 
 ## Creating a Release
@@ -101,6 +101,7 @@ The `-B` flag runs in batch mode without prompts.
 3. Monitor build progress for all platforms
 4. Once complete, check the **Releases** tab for platform-specific artifacts:
    - `libjccbas-X.Y.Z-windows-x86_64.zip`
+   - `libjccbas-X.Y.Z-windows-arm64.zip`
    - `libjccbas-X.Y.Z-macos-arm64.tar.gz`
    - `libjccbas-X.Y.Z-macos-x86_64.tar.gz`
    - `libjccbas-X.Y.Z-linux-x86_64.tar.gz`
@@ -245,9 +246,7 @@ Development versions use `-SNAPSHOT` suffix (e.g., `2.0.2-SNAPSHOT`).
 
 Each platform-specific archive contains:
 
-- `lib/` - Native library files
-  - Windows: `libjccbas.dll` (GCC), `libjccbas.a` (Clang)
-  - macOS/Linux: `libjccbas.a` (Clang)
+- `lib/libjccbas.a` - Static library (Clang)
 - `inc/` - C header files for all BASIC functions
 - `README.md` - Project documentation
 - `LICENSE` - License information
@@ -257,7 +256,7 @@ Each platform-specific archive contains:
 The release workflow (`.github/workflows/release.yml`) includes:
 
 - **Trigger**: Tags matching `v*` pattern (must be on master branch)
-- **Platforms**: Windows x86_64, macOS ARM64, macOS x86_64, Linux x86_64, Linux ARM64
+- **Platforms**: Windows x86_64, Windows ARM64, macOS ARM64, macOS x86_64, Linux x86_64, Linux ARM64
 - **Jobs**:
   1. `verify-branch`: Verifies tag points to master branch commit
   2. `build-and-test`: Builds and tests on all platforms (parallel)

@@ -25,25 +25,25 @@ void should_return_column_at_start() {
   // At the start of a line, POS should return 1
   printf("\n");
   fflush(stdout);
-  int64_t actual = pos(0);
-  assert_equals_I64_I64(1, actual);
+  int64_t actual = bas_pos_i64(0);
+  assert_equals_i64_i64(1, actual);
 }
 
 void should_return_column_after_text() {
   // After printing 5 characters, POS should return 6
   printf("\nHello");
   fflush(stdout);
-  int64_t actual = pos(0);
-  assert_equals_I64_I64(6, actual);
+  int64_t actual = bas_pos_i64(0);
+  assert_equals_i64_i64(6, actual);
 }
 
 void should_ignore_parameter() {
   // The parameter should be ignored
   printf("\n");
   fflush(stdout);
-  int64_t actual1 = pos(0);
-  int64_t actual2 = pos(99);
-  assert_equals_I64_I64(actual1, actual2);
+  int64_t actual1 = bas_pos_i64(0);
+  int64_t actual2 = bas_pos_i64(99);
+  assert_equals_i64_i64(actual1, actual2);
 }
 
 int main(int argc, char *argv[]) {

@@ -19,11 +19,11 @@
 #include "timer.h"
 
 int main(int argc, char *argv[]) {
-  double time0 = timer();
-  double time1 = timer();
+  double time0 = bas_timer();
+  double time1 = bas_timer();
 
-  assert_true_Bool(time0 > 0.0);
-  assert_true_Bool(time1 > 0.0);
+  assert_true_bool(time0 > 0.0);
+  assert_true_bool(time1 > 0.0);
   
-  assert_true_Bool(time1 >= time0);
+  assert_true_bool(time1 >= time0);
 }

@@ -15,12 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ADD_H_
-#define ADD_H_
+#ifndef JCCBAS_ADD_H
+#define JCCBAS_ADD_H
 
 // Concatenates two strings and returns the result.
 // This function is used to implement the + operator for strings.
 // This function allocates memory. It is the caller's responsibility to free this memory.
-char *add_Str_Str(const char *s1, const char *s2);
+char *bas_add_str_str(const char *s1, const char *s2);
 
-#endif /* ADD_H_ */
+#endif /* JCCBAS_ADD_H */

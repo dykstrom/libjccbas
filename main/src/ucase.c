@@ -21,7 +21,7 @@
 
 #include "ucase.h"
 
-char* ucase$(const char* s) {
+char* bas_ucase_str(const char* s) {
   size_t len = strlen(s);
   char* result = malloc(len + 1);
 

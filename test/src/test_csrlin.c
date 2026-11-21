@@ -23,19 +23,19 @@
 
 void should_return_positive_row() {
   // CSRLIN should always return a positive row number
-  int64_t actual = csrlin();
-  assert_true_Bool(actual > 0);
+  int64_t actual = bas_csrlin();
+  assert_true_bool(actual > 0);
 }
 
 void should_increase_after_newline() {
   // CSRLIN should increase by 1 after printing a newline
-  int64_t row1 = csrlin();
+  int64_t row1 = bas_csrlin();
   printf("\n");
   fflush(stdout);
-  int64_t row2 = csrlin();
+  int64_t row2 = bas_csrlin();
   // Note: If terminal scrolls, row might stay the same instead of increasing
   // So we just check that row2 is still positive and >= row1
-  assert_true_Bool(row2 >= row1);
+  assert_true_bool(row2 >= row1);
 }
 
 int main(int argc, char *argv[]) {

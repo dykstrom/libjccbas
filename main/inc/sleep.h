@@ -15,10 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SLEEP_H_
-#define SLEEP_H_
+#ifndef JCCBAS_SLEEP_H
+#define JCCBAS_SLEEP_H
 
 // Suspends the program for a number of seconds, or until a key is pressed.
-void sleep_F64(double seconds);
+void bas_sleep_f64(double seconds);
 
-#endif /* SLEEP_H_ */
+#endif /* JCCBAS_SLEEP_H */

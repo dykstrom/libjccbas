@@ -20,27 +20,26 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "asc.h"
 #include "assert.h"
 #include "inkey.h"
 
 void should_not_wait() {
-  char* actual = inkey$();
-  assert_equals_Str_Str("", actual);
+  char* actual = bas_inkey();
+  assert_equals_str_str("", actual);
   free(actual);
 }
 
 void should_wait_for_q() {
-  char* actual = inkey$();
+  char* actual = bas_inkey();
   while (strcmp(actual, "q") != 0) {
     if (strcmp("", actual) != 0) {
-      printf("%s - %" PRId64 "\n", actual, asc(actual));
+      printf("%s - %d\n", actual, (unsigned char) actual[0]);
     }
     free(actual);
-    actual = inkey$();
+    actual = bas_inkey();
   }
   printf("%s\n", actual);
-  assert_equals_Str_Str("q", actual);
+  assert_equals_str_str("q", actual);
   free(actual);
 }
 

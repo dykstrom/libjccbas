@@ -34,14 +34,14 @@
  * For GOSUB statements:
  *
  *   ; Push the return address (next statement after GOSUB)
- *   call void @gosub_push(ptr blockaddress(@function_name, %return_label))
+ *   call void @bas_gosub_push(ptr blockaddress(@function_name, %return_label))
  *   ; Jump to the subroutine
  *   br label %subroutine_label
  *
  * For RETURN statements:
  *
  *   ; Pop the return address
- *   %return_addr = call ptr @gosub_pop()
+ *   %return_addr = call ptr @bas_gosub_pop()
  *   ; Jump back to caller - must list ALL possible return targets
  *   indirectbr ptr %return_addr, [label %target1, label %target2, ...]
  *
@@ -64,18 +64,18 @@
  * Corresponding LLVM IR structure:
  *
  *   ; Declare library functions at top of module
- *   declare void @gosub_push(ptr)
- *   declare ptr @gosub_pop()
+ *   declare void @bas_gosub_push(ptr)
+ *   declare ptr @bas_gosub_pop()
  *
  *   line_20_gosub:
- *     call void @gosub_push(ptr blockaddress(@main, %line_30))
+ *     call void @bas_gosub_push(ptr blockaddress(@main, %line_30))
  *     br label %line_100
  *
  *   line_30:
  *     ; ... continues here after RETURN
  *
  *   line_40_gosub:
- *     call void @gosub_push(ptr blockaddress(@main, %line_50))
+ *     call void @bas_gosub_push(ptr blockaddress(@main, %line_50))
  *     br label %line_100
  *
  *   line_50:
@@ -86,7 +86,7 @@
  *     br label %line_110_return
  *
  *   line_110_return:
- *     %addr = call ptr @gosub_pop()
+ *     %addr = call ptr @bas_gosub_pop()
  *     ; Must list both %line_30 and %line_50 as possible targets
  *     indirectbr ptr %addr, [label %line_30, label %line_50]
  *
@@ -96,15 +96,15 @@
  *    GOSUB statements into a set (e.g., Set<String> allReturnTargets)
  *
  * 2. When generating GOSUB:
- *    - Emit gosub_push with blockaddress of the next statement's label
+ *    - Emit bas_gosub_push with blockaddress of the next statement's label
  *    - Emit br to the subroutine label
  *
  * 3. When generating RETURN:
- *    - Emit gosub_pop to get return address
+ *    - Emit bas_gosub_pop to get return address
  *    - Emit indirectbr with the COMPLETE list of all return targets
  *      from step 1
  *
- * 4. Declare gosub_push and gosub_pop at the top of each LLVM module
+ * 4. Declare bas_gosub_push and bas_gosub_pop at the top of each LLVM module
  *
  * Stack Details:
  *
@@ -116,23 +116,23 @@
  * - Not thread-safe in current implementation
  */
 
-#ifndef GOSUB_H_
-#define GOSUB_H_
+#ifndef JCCBAS_GOSUB_H
+#define JCCBAS_GOSUB_H
 
 #include <stdint.h>
 
 // Push a return address onto the GOSUB stack
 // addr: The return address (typically from LLVM's blockaddress)
-void gosub_push(void* addr);
+void bas_gosub_push(void* addr);
 
 // Pop a return address from the GOSUB stack
 // Returns: The return address to jump to, or NULL if stack is empty
-void* gosub_pop(void);
+void* bas_gosub_pop(void);
 
 // Initialize the GOSUB stack (called automatically, but can be called manually)
-void gosub_init(void);
+void bas_gosub_init(void);
 
 // Get the current GOSUB stack depth (useful for debugging)
-int gosub_depth(void);
+int bas_gosub_depth(void);
 
-#endif /* GOSUB_H_ */
+#endif /* JCCBAS_GOSUB_H */

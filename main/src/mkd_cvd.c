@@ -20,14 +20,14 @@
 
 #include "mkd_cvd.h"
 
-char* mkd$(double number) {
+char* bas_mkd_f64(double number) {
   char *result = (char *) malloc(9);
   memcpy(result, &number, 8);
   result[8] = 0;
   return result;
 }
 
-double cvd(const char* s) {
+double bas_cvd_str(const char* s) {
   double result;
   memcpy(&result, s, 8);
   return result;

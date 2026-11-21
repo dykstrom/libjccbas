@@ -25,7 +25,7 @@
 #include "sleep.h"
 #include "timer.h"
 
-void sleep_F64(const double seconds) {
+void bas_sleep_f64(const double seconds) {
   // Empty keyboard buffer
   while (_kbhit()) {
     _getch();
@@ -42,9 +42,9 @@ void sleep_F64(const double seconds) {
     Sleep((long) (seconds * 1000.0));
 
   } else {
-    const double start = timer();
+    const double start = bas_timer();
     // Loop until the time is up, or a key has been pressed
-    while (timer() - start < seconds) {
+    while (bas_timer() - start < seconds) {
       Sleep(10);
       if (_kbhit()) {
         break;

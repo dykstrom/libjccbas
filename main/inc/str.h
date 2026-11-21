@@ -15,18 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef STR_H_
-#define STR_H_
+#ifndef JCCBAS_STR_H
+#define JCCBAS_STR_H
 
 #include <stdint.h>
 
 // Returns a string representation of the given integer value. This function
 // allocates memory. It is the caller's responsibility to free this memory.
-char* str_I64(int64_t number);
+char* bas_str_i64(int64_t number);
 
 // Returns a string representation of the given floating point value. This
 // function allocates memory. It is the caller's responsibility to free this
 // memory.
-char* str_F64(double number);
+char* bas_str_f64(double number);
 
-#endif /* STR_H_ */
+#endif /* JCCBAS_STR_H */

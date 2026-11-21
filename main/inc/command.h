@@ -15,17 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COMMAND_H_
-#define COMMAND_H_
+#ifndef JCCBAS_COMMAND_H
+#define JCCBAS_COMMAND_H
 
-// Returns the command line used to invoke the program. This function
+// Returns the arguments after the program name, like COMMAND$ in QuickBASIC 4.5.
+// The arguments are joined with single spaces, letters are converted to upper
+// case, and leading blanks are removed. Returns an empty string if there are no
+// arguments or if bas_init_command_line has not been called. This function
 // allocates memory. It is the caller's responsibility to free this memory.
-char *command$();
+char *bas_command();
 
-#ifndef _WIN32
-// On Unix-like systems, this function should be called from main() to initialize
-// the command line. On Windows, this is not needed as GetCommandLineA() is used.
-void init_command_line(int argc, char *argv[]);
-#endif
+// Stores the command line for bas_command. The main function must call this
+// function on every OS. A later call replaces the stored command line.
+void bas_init_command_line(int argc, char *argv[]);
 
-#endif /* COMMAND_H_ */
+#endif /* JCCBAS_COMMAND_H */

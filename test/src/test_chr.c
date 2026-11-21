@@ -24,11 +24,11 @@ int main(int argc, char *argv[])
 {
   char *actual;
 
-  actual = chr$(45);
-  assert_equals_Str_Str("-", actual);
+  actual = bas_chr_i64(45);
+  assert_equals_str_str("-", actual);
   free(actual);
 
-  actual = chr$(97);
-  assert_equals_Str_Str("a", actual);
+  actual = bas_chr_i64(97);
+  assert_equals_str_str("a", actual);
   free(actual);
 }

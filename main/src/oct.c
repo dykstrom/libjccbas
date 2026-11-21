@@ -21,7 +21,7 @@
 
 #include "oct.h"
 
-char* oct$(int64_t number) {
+char* bas_oct_i64(int64_t number) {
   int length = snprintf(0, 0, "%" PRIo64, number);
   char *result = (char *) malloc(length + 1);
   snprintf(result, length + 1, "%" PRIo64, number);

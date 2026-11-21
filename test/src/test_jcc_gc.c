@@ -51,15 +51,15 @@ static void test_init_defaults(void) {
 
   jcc_gc_init(0, 0);
   jcc_gc_stats(&s);
-  assert_equals_I64_I64(100, s.threshold);
-  assert_equals_I64_I64(0, s.registered);
-  assert_equals_I64_I64(0, s.live);
-  assert_equals_I64_I64(0, s.collections);
-  assert_equals_I64_I64(0, s.freed);
+  assert_equals_i64_i64(100, s.threshold);
+  assert_equals_i64_i64(0, s.registered);
+  assert_equals_i64_i64(0, s.live);
+  assert_equals_i64_i64(0, s.collections);
+  assert_equals_i64_i64(0, s.freed);
 
   jcc_gc_init(50, 0);
   jcc_gc_stats(&s);
-  assert_equals_I64_I64(50, s.threshold);
+  assert_equals_i64_i64(50, s.threshold);
 }
 
 // Reachability: a rooted object survives collection; an unrooted one is freed.
@@ -76,9 +76,9 @@ static void test_reachability(void) {
 
   jcc_gc_collect();
   jcc_gc_stats(&s);
-  assert_equals_I64_I64(2, s.registered);
-  assert_equals_I64_I64(1, s.live);
-  assert_equals_I64_I64(1, s.freed);
+  assert_equals_i64_i64(2, s.registered);
+  assert_equals_i64_i64(1, s.live);
+  assert_equals_i64_i64(1, s.freed);
 
   jcc_gc_pop_frame();
 }
@@ -99,8 +99,8 @@ static void test_ignored_slot_values(void) {
 
   jcc_gc_collect();  // must not crash on NULL / non-heap slot values
   jcc_gc_stats(&s);
-  assert_equals_I64_I64(0, s.live);
-  assert_equals_I64_I64(1, s.freed);
+  assert_equals_i64_i64(0, s.live);
+  assert_equals_i64_i64(1, s.freed);
 
   jcc_gc_pop_frame();
 }
@@ -125,8 +125,8 @@ static void test_global_roots(void) {
 
   jcc_gc_collect();
   jcc_gc_stats(&s);
-  assert_equals_I64_I64(2, s.live);
-  assert_equals_I64_I64(1, s.freed);
+  assert_equals_i64_i64(2, s.live);
+  assert_equals_i64_i64(1, s.freed);
 }
 
 // Frames: a nested frame's roots are dropped by pop_frame.
@@ -147,13 +147,13 @@ static void test_frames(void) {
 
   jcc_gc_collect();
   jcc_gc_stats(&s);
-  assert_equals_I64_I64(2, s.live);  // both frames' roots live
+  assert_equals_i64_i64(2, s.live);  // both frames' roots live
 
   jcc_gc_pop_frame();  // drop inner's frame
   jcc_gc_collect();
   jcc_gc_stats(&s);
-  assert_equals_I64_I64(1, s.live);  // inner now unreachable
-  assert_true_Bool(s.freed >= 1);
+  assert_equals_i64_i64(1, s.live);  // inner now unreachable
+  assert_true_bool(s.freed >= 1);
 
   jcc_gc_pop_frame();
 }
@@ -175,8 +175,8 @@ static void test_trigger(void) {
   p[0] = 'x';  // p must still be valid: it was not freed by its own trigger
 
   jcc_gc_stats(&s);
-  assert_true_Bool(s.collections >= 1);
-  assert_equals_I64_I64(1, s.live);  // the 4 unrooted blocks swept, p inserted
+  assert_true_bool(s.collections >= 1);
+  assert_equals_i64_i64(1, s.live);  // the 4 unrooted blocks swept, p inserted
 }
 
 // Threshold doubling: with everything rooted, collections free nothing, so the
@@ -196,8 +196,8 @@ static void test_threshold_doubling(void) {
   }
 
   jcc_gc_stats(&s);
-  assert_equals_I64_I64(100, s.live);
-  assert_true_Bool(s.threshold > 4);  // grew because live kept exceeding half
+  assert_equals_i64_i64(100, s.live);
+  assert_true_bool(s.threshold > 4);  // grew because live kept exceeding half
 }
 
 // Typed objects: trace marks interior refs; finalize reclaims unmarked objects.
@@ -220,14 +220,14 @@ static void test_trace_and_finalize(void) {
 
   jcc_gc_collect();
   jcc_gc_stats(&s);
-  assert_equals_I64_I64(2, s.live);  // rec kept by root, child kept by trace
-  assert_equals_I64_I64(0, finalize_count);
+  assert_equals_i64_i64(2, s.live);  // rec kept by root, child kept by trace
+  assert_equals_i64_i64(0, finalize_count);
 
   root = NULL;  // rec (and thus child) now unreachable
   jcc_gc_collect();
   jcc_gc_stats(&s);
-  assert_equals_I64_I64(0, s.live);
-  assert_equals_I64_I64(1, finalize_count);  // rec finalized; child plain-freed
+  assert_equals_i64_i64(0, s.live);
+  assert_equals_i64_i64(1, finalize_count);  // rec finalized; child plain-freed
 
   jcc_gc_pop_frame();
 }
@@ -264,11 +264,11 @@ static void test_load(void) {
   }
 
   jcc_gc_stats(&s);
-  assert_equals_I64_I64(ALLOCS, s.registered);
-  assert_true_Bool(s.collections >= 1);       // the threshold must have fired
-  assert_equals_I64_I64(non_null, s.live);    // live == distinct rooted strings
-  assert_true_Bool(s.live <= SLOTS);          // can never exceed the slot count
-  assert_equals_I64_I64(s.registered, s.freed + s.live);  // nothing leaked/lost
+  assert_equals_i64_i64(ALLOCS, s.registered);
+  assert_true_bool(s.collections >= 1);       // the threshold must have fired
+  assert_equals_i64_i64(non_null, s.live);    // live == distinct rooted strings
+  assert_true_bool(s.live <= SLOTS);          // can never exceed the slot count
+  assert_equals_i64_i64(s.registered, s.freed + s.live);  // nothing leaked/lost
 }
 
 // Debug output: with debug enabled and JCC_GC_LOG set, shutdown appends the

@@ -26,17 +26,17 @@ static void* gosub_stack[GOSUB_STACK_SIZE];
 static int gosub_stack_ptr = 0;
 static int gosub_initialized = 0;
 
-void gosub_init(void) {
+void bas_gosub_init(void) {
     if (!gosub_initialized) {
         gosub_stack_ptr = 0;
         gosub_initialized = 1;
     }
 }
 
-void gosub_push(void* addr) {
+void bas_gosub_push(void* addr) {
     // Initialize on first use
     if (!gosub_initialized) {
-        gosub_init();
+        bas_gosub_init();
     }
 
     // Check for stack overflow
@@ -50,10 +50,10 @@ void gosub_push(void* addr) {
     gosub_stack_ptr++;
 }
 
-void* gosub_pop(void) {
+void* bas_gosub_pop(void) {
     // Initialize on first use
     if (!gosub_initialized) {
-        gosub_init();
+        bas_gosub_init();
     }
 
     // Check for stack underflow
@@ -67,9 +67,9 @@ void* gosub_pop(void) {
     return gosub_stack[gosub_stack_ptr];
 }
 
-int gosub_depth(void) {
+int bas_gosub_depth(void) {
     if (!gosub_initialized) {
-        gosub_init();
+        bas_gosub_init();
     }
     return gosub_stack_ptr;
 }
